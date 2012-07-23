@@ -21,3 +21,10 @@
     (is (= :bomb (open [0 1] [[0 :bomb] [0 0]])) "Opening a bomb gives bomb")
     (is (= 1 (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])))
 ))
+
+(deftest test-random-board
+  (testing "That random board is generated"
+    (is (= 4 (count (random-board 4 8 3))))
+    (is (= 8 (count (first (random-board 4 8 3)))))
+    (is (= 32 (count (filter #(= :bomb %) (reduce concat (random-board 4 8 32))))))
+  ))

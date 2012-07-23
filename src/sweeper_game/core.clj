@@ -22,5 +22,5 @@
   )
 
 (defn random-board [y x bombs]
-  []
+  (repeat y (repeat x :bomb))
   )
