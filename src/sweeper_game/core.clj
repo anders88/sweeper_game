@@ -16,9 +16,7 @@
   )
 
 (defn open [pos board]
-  (if (bomb? pos board) :bomb
-    1
-;    (let [y (first pos) x (second pos)]
-;    (count (filter #(bomb? % board)))
+  (if (bomb? pos board) :bomb    
+    (count (filter #(bomb? % board) (neighbours pos)))
     )
   )
