@@ -20,3 +20,7 @@
     (count (filter #(bomb? % board) (neighbours pos)))
     )
   )
+
+(defn random-board [y x bombs]
+  []
+  )
