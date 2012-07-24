@@ -21,6 +21,10 @@
     )
 )
 
+(defn board-coordinates [y x]
+  (partition-all x (for [indy (range 0 y) indx (range 0 x)] [indy indx]))
+  )
+
 (defn remove-item [listing number]
   (concat (subvec (vec listing) 0 number) 
         (if (= (inc number) (count listing)) [] (subvec (vec listing) (inc number))))
@@ -34,6 +38,9 @@
         (dec picks)))
   )))
 
-(defn random-board [y x bombs]
-  (repeat y (repeat x :bomb))
-  )
+(defn random-board [y x num-bombs]
+  (let [bombs 
+    (set (pick-random (for [indx (range 0 x) indy (range 0 y)] [indy indx]) num-bombs))] 
+  (map (fn[row] 
+    (map #(if (contains? bombs %) :bomb 0) row)) (board-coordinates y x)) 
+  ))
