@@ -27,4 +27,12 @@
     (is (= 4 (count (random-board 4 8 3))))
     (is (= 8 (count (first (random-board 4 8 3)))))
     (is (= 32 (count (filter #(= :bomb %) (reduce concat (random-board 4 8 32))))))
+;    (is (= 1 (count (filter #(= :bomb %) (reduce concat (random-board 4 8 1))))))
   ))
+
+(deftest test-random-picker
+  (testing "Pick random number"
+    (is (= 1 (count (pick-random [1 2 3] 1))))
+    (is (= 2 (count (pick-random [1 2 3] 2))))
+    (is (= #{1 2 3 4 5} (set (pick-random [1 2 3 4 5] 5))))
+    ))
