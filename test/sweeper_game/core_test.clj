@@ -36,3 +36,8 @@
     (is (= 2 (count (pick-random [1 2 3] 2))))
     (is (= #{1 2 3 4 5} (set (pick-random [1 2 3 4 5] 5))))
     ))
+
+(deftest test-hint
+  (testing "That hint gives an unexplored field"
+  (is (= [1 2] (hint [[0 0 0] [:bomb :bomb 0] [0 0 0]] [[true true true] [false false false] [true true true]])))
+  ))
