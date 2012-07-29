@@ -4,6 +4,8 @@
   (:use sweepergame.core)
   (:require [noir.server :as server]))
 
+(def status (ref {}))
+
 (defpage "/" []
     "Welcome to Noiraazz")
 
@@ -22,8 +24,18 @@
    "</table></body></html>")
   )
 
+
+(defn update-board [board]
+  (dosync (ref-set status (assoc @status :board board)))
+  )
+
 (defpage "/new" []
-  (board-str (random-board 8 8 10))
+  (update-board (random-board 8 8 10))
+  (board-str (@status :board))
+  )
+
+(defpage "/show" []
+  (board-str (@status :board))
   )
 
 (defn -main [& m]
