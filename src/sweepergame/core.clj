@@ -1,9 +1,4 @@
-(ns sweeper-game.core)
-
-(defn -main
-  "I don't do a whole lot."
-  [& args]
-  (println "Hello, World!"))
+(ns sweepergame.core)
 
 (defn bomb? [pos board]
   (let [y (first pos) x (second pos)]

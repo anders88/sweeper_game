@@ -1,6 +1,6 @@
-(ns sweeper-game.core-test
+(ns sweepergame.core-test
   (:use clojure.test
-        sweeper-game.core))
+        sweepergame.core))
 
 (deftest test-find-bomb
   (testing "That it indicates bombs on and off board"
