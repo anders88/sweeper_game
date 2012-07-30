@@ -31,19 +31,28 @@
   (str ((ring-request) :params))
 )
 
+(defn to-int [s]
+  (try (Integer/parseInt s) (catch NumberFormatException e nil)))
+
 (defn read-coordinates [req]
   (let [para (req :params)]
-  (if (or (nil? para) (nil? (para :x)) (nil? (para :y)))
+  (if (or (nil? para) (nil? (to-int (para :x))) (nil? (to-int (para :y))))
     nil
-    [(para :y) (para :x)]
+    [(to-int (para :y)) (to-int (para :x))]
   )))
 
 (defpage "/open" []
 ;  (str ((ring-request) :params))
-  (let [result (open [0 0] (@status :board))]
+  (let [pos (read-coordinates (ring-request))]
+  
+  (if (nil? pos)
+    (str "Need to supply coordinates")
+    (let [result (open pos (@status :board))]
+    (if (= :error (result :result)) "Error in params"
+    (let []
     (update-board (result :board))
-    (str "Open returned " (result :result))
-  )
+    (str "Open returned " (result :result))))
+  )))
   )
 
 
