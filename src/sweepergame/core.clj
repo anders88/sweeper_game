@@ -20,7 +20,9 @@
   )
 
 (defn open [pos board]
-  (if (bomb? pos board) {:result :bomb :board board}    
+  (cond (bomb? pos board) {:result :bomb :board board}    
+        (contains-what? :open pos board) {:result :open :board board}
+    :else
     {:result (count (filter #(bomb? % board) (neighbours pos))) 
     :board (update-board board pos :open)})
 )

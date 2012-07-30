@@ -20,6 +20,7 @@
 (deftest test-feedback
   (testing "That it gives the right feedback"
     (is (= {:result :bomb :board [[0 :bomb] [0 0]]} (open [0 1] [[0 :bomb] [0 0]])) "Opening a bomb gives bomb")
+    (is (= {:result :open :board [[0 :open] [0 0]]} (open [0 1] [[0 :open] [0 0]])) "Opening already opened")
     (is (= {:result 1 :board [[0 0 0] [:bomb :open 0] [0 0 0]]} (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])) "Opening a field gives updated value")
 ))
 
