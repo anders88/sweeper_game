@@ -1,9 +1,18 @@
 (ns sweepergame.core)
 
-(defn bomb? [pos board]
+(defn update-board [board pos newval]
+  (let [y (first pos) x (second pos)]
+  (assoc board y (assoc (board y) x newval)))
+  )
+
+(defn contains-what? [what pos board]
   (let [y (first pos) x (second pos)]
   (and (>= x 0) (>= y 0) (< y (count board)) (< x (count (board 0)))
-  (= :bomb ((board y) x))))
+  (= what ((board y) x))))
+  )
+
+(defn bomb? [pos board]
+  (contains-what? :bomb pos board)
   )
 
 (defn neighbours [pos]
@@ -11,9 +20,9 @@
   )
 
 (defn open [pos board]
-  (if (bomb? pos board) :bomb    
-    (count (filter #(bomb? % board) (neighbours pos)))
-    )
+  (if (bomb? pos board) {:result :bomb :board board}    
+    {:result (count (filter #(bomb? % board) (neighbours pos))) 
+    :board (update-board board pos :open)})
 )
 
 (defn board-coordinates [y x]

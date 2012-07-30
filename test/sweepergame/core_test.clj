@@ -16,11 +16,18 @@
     )
   )
 
+
 (deftest test-feedback
   (testing "That it gives the right feedback"
-    (is (= :bomb (open [0 1] [[0 :bomb] [0 0]])) "Opening a bomb gives bomb")
-    (is (= 1 (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])))
+    (is (= {:result :bomb :board [[0 :bomb] [0 0]]} (open [0 1] [[0 :bomb] [0 0]])) "Opening a bomb gives bomb")
+    (is (= {:result 1 :board [[0 0 0] [:bomb :open 0] [0 0 0]]} (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])) "Opening a field gives updated value")
 ))
+
+(deftest test-update-board
+  (testing "That the board is updated"
+    (is (= [[0 :bomb :open] [0 0 0]] (update-board [[0 :bomb 0] [0 0 0]] [0 2] :open)))
+    )
+  )
 
 (deftest test-random-board
   (testing "That random board is generated"
