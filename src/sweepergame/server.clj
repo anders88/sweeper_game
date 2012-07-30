@@ -27,6 +27,17 @@
   (dosync (ref-set status (assoc @status :board board)))
   )
 
+(defpage "/test" []
+  (str ((ring-request) :params))
+)
+
+(defn read-coordinates [req]
+  (let [para (req :params)]
+  (if (or (nil? para) (nil? (para :x)) (nil? (para :y)))
+    nil
+    [(para :y) (para :x)]
+  )))
+
 (defpage "/open" []
 ;  (str ((ring-request) :params))
   (let [result (open [0 0] (@status :board))]
