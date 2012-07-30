@@ -24,9 +24,9 @@
     (is (= {:result 1 :board [[0 0 0] [:bomb :open 0] [0 0 0]]} (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])) "Opening a field gives updated value")
 ))
 
-(deftest test-update-board
+(deftest test-calculate-board
   (testing "That the board is updated"
-    (is (= [[0 :bomb :open] [0 0 0]] (update-board [[0 :bomb 0] [0 0 0]] [0 2] :open)))
+    (is (= [[0 :bomb :open] [0 0 0]] (calculate-board [[0 :bomb 0] [0 0 0]] [0 2] :open)))
     )
   )
 

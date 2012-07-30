@@ -1,6 +1,6 @@
 (ns sweepergame.core)
 
-(defn update-board [board pos newval]
+(defn calculate-board [board pos newval]
   (let [y (first pos) x (second pos)]
   (assoc board y (assoc (board y) x newval)))
   )
@@ -24,7 +24,7 @@
         (contains-what? :open pos board) {:result :open :board board}
     :else
     {:result (count (filter #(bomb? % board) (neighbours pos))) 
-    :board (update-board board pos :open)})
+    :board (calculate-board board pos :open)})
 )
 
 (defn board-coordinates [y x]
