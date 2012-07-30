@@ -5,6 +5,7 @@
   (:require [noir.server :as server]))
 
 (def status (ref {}))
+(def debug true)
 
 (defpage "/" []
     "Welcome to Noiraazz")
