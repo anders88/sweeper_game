@@ -46,5 +46,5 @@
 
 (deftest test-hint
   (testing "That hint gives an unexplored field"
-  (is (= [1 2] (hint [[0 0 0] [:bomb :bomb 0] [0 0 0]] [[true true true] [false false false] [true true true]])))
+  (is (= [1 2] (hint [[:open :open :open] [:bomb :bomb 0] [:open :open :open]])))
   ))

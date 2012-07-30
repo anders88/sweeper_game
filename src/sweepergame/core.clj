@@ -49,10 +49,10 @@
     (map #(if (contains? bombs %) :bomb 0) row)) (board-coordinates y x)) 
   ))
 
-(defn hint [board opened]
+(defn hint [board]
   (first (pick-random (filter #(
     not (or (= :bomb ((board (first %)) (second %)))
-        ((opened (first %)) (second %)))
+        (= :open ((board (first %)) (second %))))
     )
   (for [indy (range 0 (count board)) indx (range 0 (count (board 0)))] [indy indx])
   ) 1)))
