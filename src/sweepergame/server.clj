@@ -10,16 +10,13 @@
 (defpage "/" []
     "Welcome to Noiraazz")
 
-(defpage "/open" []
-  (str ((ring-request) :params))
-  )
 
 (defn board-str [board]
   (str "<html></body><table>"
   (reduce str 
     (map (fn [row] 
       (str "<tr>" (reduce str 
-        (map #(str "<td>" (if (= :bomb %) "X" "0") "</td>") row)) 
+        (map #(str "<td>" (cond (= :bomb %) "X" (= :open %) "1" :else "0") "</td>") row)) 
        "</tr>")
    ) board)) 
    "</table></body></html>")
@@ -29,6 +26,15 @@
 (defn update-board [board]
   (dosync (ref-set status (assoc @status :board board)))
   )
+
+(defpage "/open" []
+;  (str ((ring-request) :params))
+  (let [result (open [0 0] (@status :board))]
+    (update-board (result :board))
+    (str "Open returned " (result :result))
+  )
+  )
+
 
 (defpage "/new" []
   (update-board (random-board 8 8 10))

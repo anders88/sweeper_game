@@ -19,7 +19,7 @@
   (for [xd (range -1 2) yd (range -1 2)] [(+ yd (first pos)) (+ xd (second pos))])
   )
 
-(defn open [pos board]
+(defn open [pos board]  
   (cond (bomb? pos board) {:result :bomb :board board}    
         (contains-what? :open pos board) {:result :open :board board}
     :else
@@ -47,9 +47,9 @@
 (defn random-board [y x num-bombs]
   (let [bombs 
     (set (pick-random (for [indx (range 0 x) indy (range 0 y)] [indy indx]) num-bombs))] 
-  (map (fn[row] 
-    (map #(if (contains? bombs %) :bomb 0) row)) (board-coordinates y x)) 
-  ))
+  (vec (map (fn[row] 
+    (vec (map #(if (contains? bombs %) :bomb 0) row))) (board-coordinates y x)) 
+  )))
 
 (defn hint [board]
   (first (pick-random (filter #(
