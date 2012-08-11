@@ -1,14 +1,34 @@
 (ns sweepergame.server
-  (:use noir.core)
-  (:use noir.request)
-  (:use sweepergame.core)
+  (:use [noir.core]
+   [noir.request]
+   [sweepergame.core]
+   [hiccup.page-helpers :only [html5 include-js link-to unordered-list]]
+   [hiccup.form-helpers])
   (:require [noir.server :as server]))
 
-(def status (ref {}))
+(def status (ref {:numplayers 0}))
 (def debug true)
+(def gen-new-board '(random-board 8 8 10))
 
 (defpage "/" []
-    "Welcome to Noiraazz")
+    (html5 [:body [:h1 "Welcome to Sweepergame"]
+    (form-to [:post "/register"]
+     (label "newval" "Your name")
+     (text-field "name")
+     (submit-button "Register"))])
+)
+
+
+(defpage [:post "/register"] {:as registerobject}
+  (dosync 
+    (let [playno (inc (@status :numplayers))]
+    (ref-set status (assoc @status :numplayers playno
+      {:name (registerobject :name) :board (random-board 8 8 10)}))
+    (html5 [:body [:h1 "You have code " playno]]))
+  )
+  
+)
+
 
 
 (defn board-str [board]
