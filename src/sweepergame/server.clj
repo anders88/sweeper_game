@@ -1,33 +1,49 @@
 (ns sweepergame.server
   (:use [noir.core]
    [noir.request]
+   [noir.response :only [redirect]]
    [sweepergame.core]
-   [hiccup.page-helpers :only [html5 include-js link-to unordered-list]]
+   [hiccup.page-helpers :only [html5 link-to]]
    [hiccup.form-helpers])
   (:require [noir.server :as server]))
 
-(def status (ref {:numplayers 0}))
+(def status (ref {:numplayers 0 :players {}}))
 (def debug true)
-(def gen-new-board '(random-board 8 8 10))
+
+(defn gen-new-board [] (random-board 8 8 10))
+
+(defn  show-scoreboard []
+  [:div {:id "scoreboard"}
+    [:table {:border 1}
+      [:tr [:th "Name"] [:th "Score"]]
+      (map (fn [player-map] [:tr [:td (player-map :name)] [:td (player-map :points)]]) (vals (@status :players)))
+      ]
+    
+    ]
+  )
 
 (defpage "/" []
     (html5 [:body [:h1 "Welcome to Sweepergame"]
     (form-to [:post "/register"]
      (label "newval" "Your name")
      (text-field "name")
-     (submit-button "Register"))])
+     (submit-button "Register"))
+    [:p (show-scoreboard)]])
 )
-
 
 (defpage [:post "/register"] {:as registerobject}
   (dosync 
     (let [playno (inc (@status :numplayers))]
-    (ref-set status (assoc @status :numplayers playno
-      {:name (registerobject :name) :board (random-board 8 8 10)}))
-    (html5 [:body [:h1 "You have code " playno]]))
-  )
-  
+    (ref-set status (assoc @status 
+      :numplayers playno
+      :players (assoc (@status :players)
+      (str playno)
+      {:name (registerobject :name) :board (gen-new-board) :points 0})))
+    (html5 [:body [:h1 "You have code " playno]
+           [:p (link-to "/" "Scoreboard")]]))
+  )  
 )
+
 
 
 
