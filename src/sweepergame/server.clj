@@ -11,6 +11,7 @@
 (def debug true)
 
 (defn gen-new-board [] (random-board 8 8 10))
+(def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
 (defn  show-scoreboard []
   [:div {:id "scoreboard"}
@@ -59,13 +60,6 @@
   )
 
 
-(defn update-board [board]
-  (dosync (ref-set status (assoc @status :board board)))
-  )
-
-(defpage "/test" []
-  (str ((ring-request) :params))
-)
 
 (defn to-int [s]
   (try (Integer/parseInt s) (catch NumberFormatException e nil)))
@@ -77,7 +71,10 @@
     [(to-int (para :y)) (to-int (para :x))]
   )))
 
-(defpage "/open" []
+
+;(defpage [:get "/open"] {:as )
+
+(defpage "/openx" []
 ;  (str ((ring-request) :params))
   (let [pos (read-coordinates (ring-request))]
   
@@ -92,14 +89,6 @@
   )
 
 
-(defpage "/new" []
-  (update-board (random-board 8 8 10))
-  (board-str (@status :board))
-  )
-
-(defpage "/show" []
-  (board-str (@status :board))
-  )
 
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
