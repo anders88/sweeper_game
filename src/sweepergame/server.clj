@@ -68,29 +68,32 @@
 (defn to-int [s]
   (try (Integer/parseInt s) (catch NumberFormatException e nil)))
 
-(defn read-coordinates [req]
-  (let [para (req :params)]
+(defn read-coordinates [para]  
   (if (or (nil? para) (nil? (to-int (para :x))) (nil? (to-int (para :y))))
     nil
     [(to-int (para :y)) (to-int (para :x))]
-  )))
+  ))
 
-
-;(defpage [:get "/open"] {:as )
-
-(defpage "/openx" []
-;  (str ((ring-request) :params))
-  (let [pos (read-coordinates (ring-request))]
-  
-  (if (nil? pos)
-    (str "Need to supply coordinates")
-    (let [result (open pos (@status :board))]
-    (if (= :error (result :result)) "Error in params"
-    (let []
-    (update-board (result :board))
-    (str "Open returned " (result :result))))
-  )))
+(defn calc-score [open-res board old-score]
+  (cond (or (= open-res :open) (= open-res :board)) 0
+  :else (inc old-score)
   )
+  )
+
+(defpage [:get "/open"] {:as openpart}
+  (let [player-map ((@status :players) (openpart :id)) pos (read-coordinates openpart)]
+  (cond 
+    (nil? player-map) "Unknown player"
+    (nil? pos) "Coordinates needed"
+    :else (let [result (open pos (player-map :board))]
+  (let [score (calc-score (result :result) (result :board) (player-map :points))]
+    (dosync (ref-set status (assoc @status 
+      :players (assoc (@status :players) 
+    (openpart :id) (assoc player-map :points score :board (result :board))))))
+    (str (result :result))
+  ))
+  )
+))
 
 
 
