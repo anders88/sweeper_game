@@ -32,11 +32,15 @@
     [:p (show-scoreboard)]])
 )
 
+(defn new-playno [playno]
+  (+ (* (+ (rand-int 8000) 1000) 100) (+ playno 10))
+  )
+
 (defpage [:post "/register"] {:as registerobject}
   (dosync 
-    (let [playno (inc (@status :numplayers))]
+    (let [playno (new-playno (inc (@status :numplayers)))]
     (ref-set status (assoc @status 
-      :numplayers playno
+      :numplayers (inc (@status :numplayers))
       :players (assoc (@status :players)
       (str playno)
       {:name (registerobject :name) :board (gen-new-board) :points 0})))
