@@ -59,5 +59,7 @@
     )
   (for [indy (range 0 (count board)) indx (range 0 (count (board 0)))] [indy indx])
   ) 1))]
-  {:result hint-pos :board (calculate-board board hint-pos :open)}
+  {:result hint-pos 
+  :count (count (filter #(bomb? % board) (neighbours hint-pos)))
+  :board (calculate-board board hint-pos :open)}
 ))
