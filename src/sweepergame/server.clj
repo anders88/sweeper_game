@@ -98,6 +98,18 @@
   )
 ))
 
+(defpage [:get "/hint"] {:as openpart}
+  (let [player-map ((@status :players) (openpart :id))]
+  (if 
+    (nil? player-map) "Unknown player"
+    (let [result (hint (player-map :board))]
+    (dosync (ref-set status (assoc @status 
+      :players (assoc (@status :players) 
+    (openpart :id) (assoc player-map :board (result :board))))))
+    (str (result :result))
+  )))
+  )
+
 (defn board-as-html [board]
   [:table
   (map (fn [row] [:tr (map (fn [cell] [:td (cond (= :bomb cell) "X" (= :open cell) "1" :else "0")]) row)]) board)
@@ -111,7 +123,7 @@
     (if (nil? player-map) "Unknown player"
     (let [player-board (player-map :board) player-score (player-map :points)]
       (board-as-html (player-map :board))
-      [:p (str "Score " player-score)]
+;      [:p (str "Score " player-score)]
     )))
     "Only allowed in debug mode")]
 ))
