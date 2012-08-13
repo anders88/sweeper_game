@@ -33,7 +33,8 @@
 )
 
 (defn new-playno [playno]
-  (+ (* (+ (rand-int 8000) 1000) 100) (+ playno 10))
+  (if debug playno
+  (+ (* (+ (rand-int 8000) 1000) 100) (+ playno 10)))
   )
 
 (defpage [:post "/register"] {:as registerobject}
@@ -63,11 +64,7 @@
    "</table></body></html>")
   )
 
-(defn board-as-html [board]
-  [:table
-  (map (fn [row]
-  ]
-)
+
 
 
 
@@ -101,12 +98,23 @@
   )
 ))
 
+(defn board-as-html [board]
+  [:table
+  (map (fn [row] [:tr (map (fn [cell] [:td (cond (= :bomb cell) "X" (= :open cell) "1" :else "0")]) row)]) board)
+  ]
+)
+
 (defpage [:get "/debugdisplay"] {:as idpart}
   (html5 [:body
   (if debug 
-    (let [player-map ((@status :players) (openpart :id))]
-      
-  
+    (let [player-map ((@status :players) (idpart :id))]
+    (if (nil? player-map) "Unknown player"
+    (let [player-board (player-map :board) player-score (player-map :points)]
+      (board-as-html (player-map :board))
+      [:p (str "Score " player-score)]
+    )))
+    "Only allowed in debug mode")]
+))
 
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
