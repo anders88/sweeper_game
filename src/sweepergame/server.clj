@@ -63,6 +63,12 @@
    "</table></body></html>")
   )
 
+(defn board-as-html [board]
+  [:table
+  (map (fn [row]
+  ]
+)
+
 
 
 (defn to-int [s]
@@ -95,7 +101,12 @@
   )
 ))
 
-
+(defpage [:get "/debugdisplay"] {:as idpart}
+  (html5 [:body
+  (if debug 
+    (let [player-map ((@status :players) (openpart :id))]
+      
+  
 
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
