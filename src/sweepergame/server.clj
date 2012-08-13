@@ -112,7 +112,11 @@
 
 (defn board-as-html [board]
   [:table
-  (map (fn [row] [:tr (map (fn [cell] [:td (cond (= :bomb cell) "X" (= :open cell) "1" :else "0")]) row)]) board)
+  (map (fn [row] [:tr (map (fn [cell] [:td 
+    (cond (= :bomb cell) "X" 
+          (= :open cell) "1" 
+          (= :hint cell) "h"
+          :else "0")]) row)]) board)
   ]
 )
 
