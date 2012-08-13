@@ -60,5 +60,6 @@
 
 (deftest test-hint
   (testing "That hint gives an unexplored field"
-  (is (= [1 2] (hint [[:open :open :open] [:bomb :bomb 0] [:open :open :open]])))
+  (is (= {:result [1 2] :board 
+    [[:open :open :open] [:bomb :bomb :open] [:open :open :open]]}  (hint [[:open :open :open] [:bomb :bomb 0] [:open :open :open]])))
   ))
