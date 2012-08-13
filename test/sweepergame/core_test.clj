@@ -28,9 +28,9 @@
 
 (deftest test-feedback
   (testing "That it gives the right feedback"
-    (is (= {:result :bomb :board [[0 :bomb] [0 0]]} (open [0 1] [[0 :bomb] [0 0]])) "Opening a bomb gives bomb")
-    (is (= {:result :open :board [[0 :open] [0 0]]} (open [0 1] [[0 :open] [0 0]])) "Opening already opened")
-    (is (= {:result 1 :board [[0 0 0] [:bomb :open 0] [0 0 0]]} (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])) "Opening a field gives updated value")
+    (is (= {:result :bomb :pos [0 1] :board [[0 :bomb] [0 0]]} (open [0 1] [[0 :bomb] [0 0]])) "Opening a bomb gives bomb")
+    (is (= {:result :open :pos [0 1] :board [[0 :open] [0 0]]} (open [0 1] [[0 :open] [0 0]])) "Opening already opened")
+    (is (= {:result 1 :pos [1 1] :board [[0 0 0] [:bomb :open 0] [0 0 0]]} (open [1 1] [[0 0 0] [:bomb 0 0] [0 0 0]])) "Opening a field gives updated value")
     (is (= 1 ((open [0 0] [[0 0 0] [:bomb 0 0] [0 0 0]]) :result)) "Opening upper left")
     (is (= 0 ((open [0 0] big-board) :result)) "Big board")
     (is (not (nil? ((open [0 0] (random-board 8 8 10)) :result))) "Big board random")

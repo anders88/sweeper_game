@@ -20,11 +20,13 @@
   )
 
 (defn open [pos board]  
-  (cond (bomb? pos board) {:result :bomb :board board}    
-        (contains-what? :open pos board) {:result :open :board board}
+  (cond (bomb? pos board) {:result :bomb :board board :pos pos}    
+        (contains-what? :open pos board) {:result :open :board board :pos pos}
     :else
     {:result (count (filter #(bomb? % board) (neighbours pos))) 
-    :board (calculate-board board pos :open)})
+    :board (calculate-board board pos :open)
+    :pos pos
+    })
 )
 
 (defn board-coordinates [y x]
