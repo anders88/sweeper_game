@@ -75,10 +75,13 @@
   (not (contains? (set (reduce concat board)) 0))
   )
 
+(defn finished-or-failed? [result]
+  (or (finished? (result :board)) (= :open (result :result)) (= :bomb (result :result)))
+  )
+
 
 (defn replace-if-finished [result]
-  (println "Replace if finished " (result :result))
-  (if (or (finished? (result :board)) (= :open (result :result)) (= :bomb (result :result)))
+  (if (finished-or-failed? result)
     (gen-new-board)
     (result :board)
   )
