@@ -1,8 +1,8 @@
 (ns sweepergame.core)
 
-(def board-rows 8)
-(def board-cols 8)
-(def board-bombs 10)
+(def board-rows 16)
+(def board-cols 30)
+(def board-bombs 99)
 
 (defn calculate-board [board pos newval]
   (let [y (first pos) x (second pos)]

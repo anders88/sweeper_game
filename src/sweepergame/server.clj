@@ -13,13 +13,26 @@
 
 (def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
+(def instructions
+  [:div [:h2 "Instructions"]
+    [:p (str "You must solve a minesweeper game with " board-rows " rows and " board-cols
+      " columns with " board-bombs " bombs.")]
+    [:p "You can use the following commands"]
+    [:ul [:li "To open a cell : http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
+     [:li "Let the server open a cell for you - http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
+    ]
+    [:p "You will get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero"]
+    [:p "When you finish a board (or a mine blows up) a new board will be generated automatically"]  
+    ]
+  )
+
 (defn  show-scoreboard []
   [:div {:id "scoreboard"}
     [:table {:border 1}
       [:tr [:th "Name"] [:th "Score"]]
       (map (fn [player-map] [:tr [:td (player-map :name)] [:td (player-map :points)]]) (vals (@status :players)))
       ]
-    
+    instructions
     ]
   )
 
