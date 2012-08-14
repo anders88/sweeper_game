@@ -101,7 +101,7 @@
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
     (openpart :id) (assoc player-map :points score :board (replace-if-finished result))))))
-    (str (result :pos) "," (result :result))
+    (str "Y=" (first (result :pos)) ",X=" (second (result :pos)) ",result=" (result :result))
   ))
   )
 ))
@@ -114,7 +114,7 @@
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
     (openpart :id) (assoc player-map :board (replace-if-finished result))))))
-    (str (result :result) "," (result :count))
+    (str "Y=" (first (result :result)) ",X=" (second (result :result)) ",result=" (result :count))
   )))
   )
 
