@@ -78,7 +78,7 @@
   ))
 
 (defn calc-score [open-res board old-score]
-  (cond (or (= open-res :open) (= open-res :board)) 0
+  (cond (or (= open-res :open) (= open-res :bomb)) 0
   :else (inc old-score)
   )
   )
@@ -127,7 +127,6 @@
     (if (nil? player-map) "Unknown player"
     (let [player-board (player-map :board) player-score (player-map :points)]
       (board-as-html (player-map :board))
-;      [:p (str "Score " player-score)]
     )))
     "Only allowed in debug mode")]
 ))
