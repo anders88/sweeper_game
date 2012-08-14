@@ -1,5 +1,7 @@
 (ns sweepergame.core)
 
+
+
 (defn calculate-board [board pos newval]
   (let [y (first pos) x (second pos)]
   (assoc board y (assoc (board y) x newval)))
@@ -54,6 +56,8 @@
     (vec (map #(if (contains? bombs %) :bomb 0) row))) (board-coordinates y x)) 
   )))
 
+(defn gen-new-board [] (random-board 8 8 10))
+
 (defn hint [board]
   (let [hint-pos 
   (first (pick-random (filter #(
@@ -66,3 +70,7 @@
   :count (count (filter #(bomb? % board) (neighbours hint-pos)))
   :board (calculate-board board hint-pos :hint)}
 ))
+
+(defn finished? [board]
+  (not (contains? (set (reduce concat board)) 0))
+  )

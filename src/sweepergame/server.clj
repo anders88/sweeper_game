@@ -10,7 +10,7 @@
 (def status (ref {:numplayers 0 :players {}}))
 (def debug true)
 
-(defn gen-new-board [] (random-board 8 8 10))
+
 (def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
 (defn  show-scoreboard []

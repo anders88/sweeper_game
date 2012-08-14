@@ -63,3 +63,10 @@
   (is (= {:result [1 2] :count 1 :board 
     [[:open :open :open] [:bomb :bomb :hint] [:open :open :open]]}  (hint [[:open :open :open] [:bomb :bomb 0] [:open :open :open]])))
   ))
+
+(deftest test-finished
+  (testing "That indication of finished is given"
+    (is (not (finished? (random-board 4 8 1))) "A startboard is not finished")
+    (is (finished? [[:bomb :open :open] [:hint :bomb :open] [:open :open :bomb]]) "All opened is finished")
+    )
+  )
