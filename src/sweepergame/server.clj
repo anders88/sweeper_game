@@ -77,9 +77,17 @@
     [(to-int (para :y)) (to-int (para :x))]
   ))
 
-(defn calc-score [open-res board old-score]
+(defn in-third [x]
+  (* x x x)
+  )
+
+(def tiles-to-open (- (* board-rows board-cols) board-bombs))
+(def max-score (in-third tiles-to-open))
+
+(defn calc-score [open-res board old-score]  
   (cond (or (= open-res :open) (= open-res :bomb)) 0
-  :else (inc old-score)
+  (finished? board) (+ old-score (- max-score (in-third (- tiles-to-open (number-of-hints board)))))
+  :else old-score
   )
   )
 

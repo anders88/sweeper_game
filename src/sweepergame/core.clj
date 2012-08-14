@@ -1,6 +1,8 @@
 (ns sweepergame.core)
 
-
+(def board-rows 8)
+(def board-cols 8)
+(def board-bombs 10)
 
 (defn calculate-board [board pos newval]
   (let [y (first pos) x (second pos)]
@@ -56,13 +58,16 @@
     (vec (map #(if (contains? bombs %) :bomb 0) row))) (board-coordinates y x)) 
   )))
 
-(defn gen-new-board [] (random-board 8 8 10))
+
+
+(defn gen-new-board [] (random-board board-rows board-cols board-bombs))
 
 (defn hint [board]
   (let [hint-pos 
   (first (pick-random (filter #(
     not (or (= :bomb ((board (first %)) (second %)))
-        (= :open ((board (first %)) (second %))))
+        (= :open ((board (first %)) (second %)))
+        (= :hint ((board (first %)) (second %))))
     )
   (for [indy (range 0 (count board)) indx (range 0 (count (board 0)))] [indy indx])
   ) 1))]
@@ -85,4 +90,8 @@
     (gen-new-board)
     (result :board)
   )
+  )
+
+(defn number-of-hints [board]
+  (count (filter #(= % :hint) (reduce concat board)))
   )
