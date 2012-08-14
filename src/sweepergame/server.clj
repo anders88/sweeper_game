@@ -92,7 +92,7 @@
   (let [score (calc-score (result :result) (result :board) (player-map :points))]
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
-    (openpart :id) (assoc player-map :points score :board (result :board))))))
+    (openpart :id) (assoc player-map :points score :board (replace-if-finished result))))))
     (str (result :pos) "," (result :result))
   ))
   )
@@ -105,7 +105,7 @@
     (let [result (hint (player-map :board))]
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
-    (openpart :id) (assoc player-map :board (result :board))))))
+    (openpart :id) (assoc player-map :board (replace-if-finished result))))))
     (str (result :result) "," (result :count))
   )))
   )
