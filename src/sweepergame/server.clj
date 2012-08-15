@@ -105,9 +105,9 @@
 (defn calc-score [open-res board old-score]  
   (cond (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0)
   (finished? board) (let 
-     [board-score (- max-score (in-third (- tiles-to-open (number-of-hints board))))]
+     [board-score (in-third (- tiles-to-open (number-of-hints board)))]
      (assoc old-score 
-       :total (+ old-score board-score)
+       :total (+ (old-score :total) board-score)
       :finishedBoards (inc (old-score :finishedBoards))
       :maxOnBoard (max (old-score :maxOnBoard) board-score))
        )
