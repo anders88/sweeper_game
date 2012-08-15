@@ -30,6 +30,11 @@
     ]
   )
 
+(defn sort-by-score [player-values]
+  (sort (fn [val1 val2] (compare ((val1 :points) :total) ((val2 :points) :total))) 
+       player-values)
+  )
+
 (defn  show-scoreboard []
   [:div {:id "scoreboard"}
     [:table {:border 1}
@@ -39,7 +44,7 @@
         [:td ((player-map :points) :total)]
         [:td ((player-map :points) :finishedBoards)]
         [:td ((player-map :points) :maxOnBoard)]
-        ]) (vals (@status :players)))
+        ]) (sort-by-score (vals (@status :players))))
       ]
     instructions
     ]

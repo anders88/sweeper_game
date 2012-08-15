@@ -10,3 +10,18 @@
     (is (nil? (read-coordinates {:y "1" :x "a"})) "Not numeric coordinate")
     )
   )
+
+
+(deftest test-sorting-scores 
+  (testing "That map is sorted by score"
+    (is (= [{:name "Darth" :points {:total 200 :finishedBoards 3}}
+            {:name "Luke" :points {:total 300 :finishedBoards 2}}
+          ]
+          (sort-by-score
+            [{:name "Luke" :points {:total 300 :finishedBoards 2}}
+            {:name "Darth" :points {:total 200 :finishedBoards 3}}
+           ]
+            )))
+    )
+    (is (= [] (sort-by-score [])))
+  )
