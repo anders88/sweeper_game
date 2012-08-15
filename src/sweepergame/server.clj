@@ -21,7 +21,10 @@
     [:ul [:li "To open a cell : http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
      [:li "Let the server open a cell for you - http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
     ]
-    [:p "You will get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero"]
+    [:p "You will receive an answer like this:"]
+    [:p "'Y=3,X=5,result=4'"]  
+    [:p "This indicates that the sixth column on the fourth row has four bombs. The cell in the upper left corner has coordinate 0,0"]
+    [:p "You get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero"]
     [:p "When you finish a board (or a mine blows up) a new board will be generated automatically"]  
     ]
   )
