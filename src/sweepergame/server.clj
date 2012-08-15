@@ -93,10 +93,13 @@
   (try (Integer/parseInt s) (catch NumberFormatException e nil)))
 
 (defn read-coordinates [para]  
-  (if (or (nil? para) (nil? (to-int (para :x))) (nil? (to-int (para :y))))
+  (if (nil? para) nil
+  (let [x (if (nil? (para :x)) (para :X) (para :x)) 
+        y (if (nil? (para :y)) (para :Y) (para :y))]
+  (if (or (nil? (to-int x)) (nil? (to-int y)))
     nil
-    [(to-int (para :y)) (to-int (para :x))]
-  ))
+    [(to-int y) (to-int x)]
+  ))))
 
 (defn in-third [x]
   (* x x x)
