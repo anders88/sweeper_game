@@ -152,7 +152,7 @@
 (defn board-as-html [board]
   [:table
   (map (fn [row] [:tr (map (fn [cell] [:td 
-    (cond (= :bomb cell) "X" 
+    (cond (= :bomb cell) (if debug "X" "0")
           (= :open cell) "1" 
           (= :hint cell) "h"
           :else "0")]) row)]) board)
@@ -161,13 +161,12 @@
 
 (defpage [:get "/debugdisplay"] {:as idpart}
   (html5 [:body
-  (if debug 
     (let [player-map ((@status :players) (idpart :id))]
     (if (nil? player-map) "Unknown player"
     (let [player-board (player-map :board) player-score (player-map :points)]
       (board-as-html (player-map :board))
     )))
-    "Only allowed in debug mode")]
+    ]
 ))
 
 (defn -main [& m]
