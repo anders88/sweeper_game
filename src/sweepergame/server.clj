@@ -29,8 +29,13 @@
 (defn  show-scoreboard []
   [:div {:id "scoreboard"}
     [:table {:border 1}
-      [:tr [:th "Name"] [:th "Score"]]
-      (map (fn [player-map] [:tr [:td (player-map :name)] [:td ((player-map :points) :total)]]) (vals (@status :players)))
+      [:tr [:th "Name"] [:th "Score"] [:th "Finished boards"] [:th "Max on one board"]]
+      (map (fn [player-map] [:tr 
+        [:td (player-map :name)] 
+        [:td ((player-map :points) :total)]
+        [:td ((player-map :points) :finishedBoards)]
+        [:td ((player-map :points) :maxOnBoard)]
+        ]) (vals (@status :players)))
       ]
     instructions
     ]
@@ -57,7 +62,7 @@
       :numplayers (inc (@status :numplayers))
       :players (assoc (@status :players)
       (str playno)
-      {:name (registerobject :name) :board (gen-new-board) :points {:total 0}})))
+      {:name (registerobject :name) :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0}})))
     (html5 [:body [:h1 "You have code " playno]
            [:p (link-to "/" "Scoreboard")]]))
   )  
@@ -98,10 +103,15 @@
 (def max-score (in-third tiles-to-open))
 
 (defn calc-score [open-res board old-score]  
-  (cond (or (= open-res :open) (= open-res :bomb)) {:total 0}
-  (finished? board) {:total 
-      (+ old-score (- max-score (in-third (- tiles-to-open (number-of-hints board)))))}
-  :else old-score
+  (cond (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0)
+  (finished? board) (let 
+     [board-score (- max-score (in-third (- tiles-to-open (number-of-hints board))))]
+     (assoc old-score 
+       :total (+ old-score board-score)
+      :finishedBoards (inc (old-score :finishedBoards))
+      :maxOnBoard (max (old-score :maxOnBoard) board-score))
+       )
+     :else old-score
   )
   )
 
