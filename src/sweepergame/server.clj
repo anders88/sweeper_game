@@ -30,7 +30,7 @@
   [:div {:id "scoreboard"}
     [:table {:border 1}
       [:tr [:th "Name"] [:th "Score"]]
-      (map (fn [player-map] [:tr [:td (player-map :name)] [:td (player-map :points)]]) (vals (@status :players)))
+      (map (fn [player-map] [:tr [:td (player-map :name)] [:td ((player-map :points) :total)]]) (vals (@status :players)))
       ]
     instructions
     ]
@@ -57,7 +57,7 @@
       :numplayers (inc (@status :numplayers))
       :players (assoc (@status :players)
       (str playno)
-      {:name (registerobject :name) :board (gen-new-board) :points 0})))
+      {:name (registerobject :name) :board (gen-new-board) :points {:total 0}})))
     (html5 [:body [:h1 "You have code " playno]
            [:p (link-to "/" "Scoreboard")]]))
   )  
@@ -98,8 +98,9 @@
 (def max-score (in-third tiles-to-open))
 
 (defn calc-score [open-res board old-score]  
-  (cond (or (= open-res :open) (= open-res :bomb)) 0
-  (finished? board) (+ old-score (- max-score (in-third (- tiles-to-open (number-of-hints board)))))
+  (cond (or (= open-res :open) (= open-res :bomb)) {:total 0}
+  (finished? board) {:total 
+      (+ old-score (- max-score (in-third (- tiles-to-open (number-of-hints board)))))}
   :else old-score
   )
   )
@@ -126,7 +127,7 @@
     (let [result (hint (player-map :board))]
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
-    (openpart :id) (assoc player-map :board (replace-if-finished result))))))
+    (openpart :id) (assoc player-map :board (replace-if-finished result) :points (calc-score (result :result) (result :board) (player-map :points)))))))
     (str "Y=" (first (result :result)) ",X=" (second (result :result)) ",result=" (result :count))
   )))
   )
