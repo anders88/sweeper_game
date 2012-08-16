@@ -3,7 +3,7 @@
    [noir.request]
    [noir.response :only [redirect]]
    [sweepergame.core]
-   [hiccup.page-helpers :only [html5 link-to]]
+   [hiccup.page-helpers :only [html5 link-to  include-js]]
    [hiccup.form-helpers])
   (:require [noir.server :as server]))
 
@@ -37,7 +37,7 @@
        player-values)
   )
 
-(defn show-scoreboard []
+(defn scoretable []
   [:div {:id "scoreboard"}
     [:table {:border 1}
       [:tr [:th "Name"] [:th "Score"] [:th "Finished boards"] [:th "Max opens on one board"]]
@@ -48,12 +48,27 @@
         [:td ((player-map :points) :maxOnBoard)]
         ]) (sort-by-score (vals (@status :players))))
       ]
+    
+    ]
+)
+
+(defpage "/showscoretable" []
+  (html5 (scoretable))
+  )
+
+(defn show-scoreboard []
+  [:p
+    (scoretable)
     instructions
     ]
   )
 
 (defpage "/" []
-    (html5 [:body [:h1 "Welcome to Sweepergame"]
+    (html5 
+       [:head
+    [:title "Sweepergame"]
+    (include-js "/jquery-1.7.2.js") (include-js "/reload.js")]
+      [:body [:h1 "Welcome to Sweepergame"]
     (form-to [:post "/register"]
      (label "newval" "Your name")
      (text-field "name")
@@ -168,7 +183,11 @@
 )
 
 (defpage [:get "/debugdisplay"] {:as idpart}
-  (html5 [:body
+  (html5 
+    [:head
+    [:title "Sweepergame"]
+    (include-js "/jquery-1.7.2.js") (include-js "/reload.js")]
+    [:body
     (let [player-map ((@status :players) (idpart :id))]
     (if (nil? player-map) "Unknown player"
     (let [player-board (player-map :board) player-score (player-map :points)]
