@@ -38,12 +38,27 @@
        player-values)
   )
 
+
+(defn html-encode [x]
+  (-> x 
+    (.replaceAll x "&" "&amp;") 
+    (.replaceAll ">" "&gt;")
+    (.replaceAll "<" "&lt;")
+    (.replaceAll "æ" "&aelig;")
+    (.replaceAll "Æ" "&Aelig;")
+    (.replaceAll "ø" "&oslash;")
+    (.replaceAll "Ø" "&Oslash;")
+    (.replaceAll "å" "&aring;")
+    (.replaceAll "Å" "&Åring;")
+    
+  ))
+
 (defn scoretable []
   [:div {:id "scoreboard"}
     [:table {:border 1}
       [:tr [:th "Name"] [:th "Score"] [:th "Finished boards"] [:th "Max opens on one board"]]
       (map (fn [player-map] [:tr 
-        [:td (player-map :name)] 
+        [:td (html-encode (player-map :name))] 
         [:td ((player-map :points) :total)]
         [:td ((player-map :points) :finishedBoards)]
         [:td ((player-map :points) :maxOnBoard)]
@@ -71,8 +86,8 @@
     (include-js "/jquery-1.7.2.js") (include-js "/reload.js")]
       [:body [:h1 "Welcome to Sweepergame"]
     (form-to [:post "/register"]
-     (label "newval" "Your name")
-     (text-field "name")
+     (label "name" "Your name")
+     (text-field {:maxlength 20} "name")
      (submit-button "Register"))
     [:p (show-scoreboard)]])
 )
