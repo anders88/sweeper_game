@@ -41,7 +41,7 @@
 
 (defn html-encode [x]
   (-> x 
-    (.replaceAll x "&" "&amp;") 
+    (.replaceAll "&" "&amp;") 
     (.replaceAll ">" "&gt;")
     (.replaceAll "<" "&lt;")
     (.replaceAll "æ" "&aelig;")
