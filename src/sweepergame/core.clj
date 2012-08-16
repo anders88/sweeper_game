@@ -16,8 +16,11 @@
   )
 
 (defn bomb? [pos board]
-  (contains-what? :bomb pos board)
+  (let [y (first pos) x (second pos)]
+  (or (< x 0) (< y 0) (>= y (count board)) (>= x (count (board 0)))
+  (= :bomb ((board y) x))))
   )
+  
 
 (defn neighbours [pos]
   (for [xd (range -1 2) yd (range -1 2)] [(+ yd (first pos)) (+ xd (second pos))])
