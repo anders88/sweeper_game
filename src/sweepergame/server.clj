@@ -8,7 +8,7 @@
   (:require [noir.server :as server]))
 
 (def status (ref {:numplayers 0 :players {}}))
-(def debug true)
+(def debug false)
 (def hintsleep 400)
 (def opensleep 150)
 
