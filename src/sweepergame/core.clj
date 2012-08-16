@@ -95,3 +95,7 @@
 (defn number-of-hints [board]
   (count (filter #(= % :hint) (reduce concat board)))
   )
+
+(defn number-of-opens [board]
+  (count (filter #(= % :open) (reduce concat board)))
+  )

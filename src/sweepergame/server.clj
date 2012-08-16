@@ -37,10 +37,10 @@
        player-values)
   )
 
-(defn  show-scoreboard []
+(defn show-scoreboard []
   [:div {:id "scoreboard"}
     [:table {:border 1}
-      [:tr [:th "Name"] [:th "Score"] [:th "Finished boards"] [:th "Max on one board"]]
+      [:tr [:th "Name"] [:th "Score"] [:th "Finished boards"] [:th "Max opens on one board"]]
       (map (fn [player-map] [:tr 
         [:td (player-map :name)] 
         [:td ((player-map :points) :total)]
@@ -116,18 +116,17 @@
 (def tiles-to-open (- (* board-rows board-cols) board-bombs))
 (def max-score (in-third tiles-to-open))
 
-(defn calc-score [open-res board old-score]  
-  (cond (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0)
-  (finished? board) (let 
-     [board-score (in-third (- tiles-to-open (number-of-hints board)))]
-     (assoc old-score 
-       :total (+ (old-score :total) board-score)
-      :finishedBoards (inc (old-score :finishedBoards))
-      :maxOnBoard (max (old-score :maxOnBoard) board-score))
-       )
-     :else old-score
-  )
-  )
+(defn calc-score [type-of-open open-res board old-score]  
+  (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0)
+  (let [move-score 
+    (if (= :open type-of-open) (let [num-open (number-of-opens board)] 
+     (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
+    ) 0)] 
+  (assoc old-score :total (+ (old-score :total) move-score)
+   :finishedBoards (if (finished? board) (inc (old-score :finishedBoards)) (old-score :finishedBoards))
+   :maxOnBoard (max (old-score :maxOnBoard) (number-of-opens board)))
+   ))
+)
 
 (defpage [:get "/open"] {:as openpart}
   (let [player-map ((@status :players) (openpart :id)) pos (read-coordinates openpart)]
@@ -135,7 +134,7 @@
     (nil? player-map) "Unknown player"
     (nil? pos) "Coordinates needed"
     :else (let [result (open pos (player-map :board))]
-  (let [score (calc-score (result :result) (result :board) (player-map :points))]
+  (let [score (calc-score :open (result :result) (result :board) (player-map :points))]
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
     (openpart :id) (assoc player-map :points score :board (replace-if-finished result))))))
@@ -152,7 +151,7 @@
     (let [result (hint (player-map :board))]
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
-    (openpart :id) (assoc player-map :board (replace-if-finished result) :points (calc-score (result :result) (result :board) (player-map :points)))))))
+    (openpart :id) (assoc player-map :board (replace-if-finished result) :points (calc-score :hint (result :result) (result :board) (player-map :points)))))))
     (Thread/sleep hintsleep)  
     (str "Y=" (first (result :result)) ",X=" (second (result :result)) ",result=" (result :count))
   )))
