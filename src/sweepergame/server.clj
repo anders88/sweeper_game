@@ -22,6 +22,7 @@
     [:p "You can use the following commands"]
     [:ul [:li "To open a cell : http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
      [:li "Let the server open a cell for you - http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
+     [:li "Check how you board looks like now (used for debug) http://&lt;server-address&gt;/debugdisplay?id=&lt;your id&gt;"]
     ]
     [:p "You will receive an answer like this:"]
     [:p "'Y=3,X=5,result=4'"]  
