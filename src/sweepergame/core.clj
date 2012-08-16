@@ -17,7 +17,7 @@
 
 (defn bomb? [pos board]
   (let [y (first pos) x (second pos)]
-  (or (< x 0) (< y 0) (>= y (count board)) (>= x (count (board 0)))
+  (and (>= x 0) (>= y 0) (< y (count board)) (< x (count (board 0)))
   (= :bomb ((board y) x))))
   )
   
@@ -26,8 +26,14 @@
   (for [xd (range -1 2) yd (range -1 2)] [(+ yd (first pos)) (+ xd (second pos))])
   )
 
+(defn offboard? [pos]
+  (let [y (first pos) x (second pos)]
+    (or (< x 0) (< y 0) (>= x board-cols) (>= y board-rows)) 
+  ))
+
 (defn open [pos board]  
-  (cond (bomb? pos board) {:result :bomb :board board :pos pos}    
+  (cond (offboard? pos) {:result :bomb :board board :pos pos}
+        (bomb? pos board) {:result :bomb :board board :pos pos}    
         (contains-what? :open pos board) {:result :open :board board :pos pos}
         (contains-what? :hint pos board) {:result :open :board board :pos pos}
     :else
