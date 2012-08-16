@@ -9,6 +9,8 @@
 
 (def status (ref {:numplayers 0 :players {}}))
 (def debug true)
+(def hintsleep 400)
+(def opensleep 150)
 
 
 (def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
@@ -137,6 +139,7 @@
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
     (openpart :id) (assoc player-map :points score :board (replace-if-finished result))))))
+    (Thread/sleep opensleep)  
     (str "Y=" (first (result :pos)) ",X=" (second (result :pos)) ",result=" (result :result))
   ))
   )
@@ -150,6 +153,7 @@
     (dosync (ref-set status (assoc @status 
       :players (assoc (@status :players) 
     (openpart :id) (assoc player-map :board (replace-if-finished result) :points (calc-score (result :result) (result :board) (player-map :points)))))))
+    (Thread/sleep hintsleep)  
     (str "Y=" (first (result :result)) ",X=" (second (result :result)) ",result=" (result :count))
   )))
   )
