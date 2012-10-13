@@ -4,7 +4,9 @@
    [noir.response :only [redirect]]
    [sweepergame.core]
    [hiccup.page-helpers :only [html5 link-to  include-js]]
-   [hiccup.form-helpers])
+   [hiccup.form-helpers]
+   [cheshire.core :only [generate-string]]
+   )
   (:require [noir.server :as server]))
 
 (def status (ref {:numplayers 0 :players {}}))
@@ -215,6 +217,17 @@
 
 (defpage [:get "/mainpage"] {:as nopart}
   (redirect "/mainPage.html")
+)
+
+(defn gen-json-score [scores]
+  (generate-string (map (fn [val]
+                          {:name (val :name) :total ((val :points) :total) :finishedBoards ((val :points) :finishedBoards) :maxOnBoard ((val :points) :maxOnBoard)}
+                          ) scores)
+                   )
+)
+
+(defpage [:get "/scorejson"] {:as nopart}
+  (gen-json-score (sort-by-score (vals (@status :players))))
 )
 
 (defn -main [& m]

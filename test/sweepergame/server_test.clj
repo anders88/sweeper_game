@@ -25,3 +25,13 @@
             )))
     "Checking first")
   ))
+
+
+(deftest test-json-generation-of-score
+  (testing "That that one score is correct"
+   (is (= "[{\"name\":\"Luke\",\"total\":300,\"finishedBoards\":2,\"maxOnBoard\":4},{\"name\":\"Darth\",\"total\":200,\"finishedBoards\":3,\"maxOnBoard\":5}]"
+          (gen-json-score
+                       [{:name "Luke" :points {:total 300 :finishedBoards 2 :maxOnBoard 4}}
+                        {:name "Darth" :points {:total 200 :finishedBoards 3 :maxOnBoard 5}}
+                        ])))
+))
