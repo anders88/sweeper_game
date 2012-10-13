@@ -213,6 +213,10 @@
     ]
 ))
 
+(defpage [:get "/mainpage"] {:as nopart}
+  (redirect "/mainPage.html")
+)
+
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
         port (Integer. (get (System/getenv) "PORT" "1337"))
