@@ -1,4 +1,19 @@
+<!DOCTYPE html>
 <html>
-<body>
-<h1>Howdyx</h1>
+  <head>
+    <title>Sweepergame</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Sweepergame</h1>
+    <form action="/register" method="POST">
+      <legend>Register</legend>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" maxLength="20" placeholder="Your name"/>
+      <button type="submit" class="btn">Register</button>
+    </form>
+    <script src="jquery-1.7.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
 </html>
