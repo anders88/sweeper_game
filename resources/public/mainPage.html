@@ -22,10 +22,13 @@
 
       <legend>Scores</legend>
 
-      <div id="scoreTable">
+      <div id="scoreTable" class="span6">
         <table class="table table-bordered">
           <thead>
             <th>Name</th>
+            <th>Score</th>
+            <th>Finished boards</th>
+            <th>Max opens on one board</th>
           </thead>
           <tbody id="scoreRow">
           </tbody>
@@ -50,7 +53,10 @@
     </div>
 
     <script type="text/template" id="row-template">
-      <td>Yo <%= name %></td>
+      <td><%= name %></td>
+      <td><%= total %></td>
+      <td><%= finishedBoards %></td>
+      <td><%= maxOnBoard %></td>
     </script>
   </body>
 </html>
