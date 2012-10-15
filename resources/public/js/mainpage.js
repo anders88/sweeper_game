@@ -10,7 +10,7 @@ $ (function() {
     });
 
     var ScoreRowView = Backbone.View.extend({
-        tagName: "li",
+        tagName: "tr",
 
         template: _.template($("#row-template").html()),
 
@@ -22,8 +22,6 @@ $ (function() {
 
     var scores = new ScoreRowCollection;
 
-    //scores.add([{point: "1"}, {point: "2"}]);
-
     var ScoreTableView = Backbone.View.extend({
         initialize: function() {
             scores.fetch({
@@ -31,7 +29,6 @@ $ (function() {
             });
             var scoreRow = $("#scoreRow");
             scores.each(function(row) {
-                //scoreRow.append("<li>" + row.get("point") + "</li>");
                 var rowView = new ScoreRowView({model: row});
                 scoreRow.append(rowView.render().el);
             });

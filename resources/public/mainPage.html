@@ -20,14 +20,20 @@
         <button type="submit" class="btn">Register</button>
       </form>
 
+      <legend>Scores</legend>
+
       <div id="scoreTable">
-        <ul>
-          <div id="scoreRow"></div>
-        </ul>
+        <table class="table table-bordered">
+          <thead>
+            <th>Name</th>
+          </thead>
+          <tbody id="scoreRow">
+          </tbody>
+        </table>
       </div>
 
 
-      <h2>Instructions</h2>
+      <legend>Instructions</legend>
       <p>You must solve a minesweeper game with 16 rows and 30 columns with 99 bombs.</p>
       <p>You can use the following commands</p>
       <ul>
@@ -44,7 +50,7 @@
     </div>
 
     <script type="text/template" id="row-template">
-      Yo <%= name %>
+      <td>Yo <%= name %></td>
     </script>
   </body>
 </html>
