@@ -4,6 +4,11 @@
     <title>Sweepergame</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="jquery-1.7.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/backbone.js"></script>
+    <script src="js/mainpage.js"></script>
   </head>
   <body>
     <div class="offset1">
@@ -14,6 +19,13 @@
         <input type="text" id="name" name="name" maxLength="20" placeholder="Your name"/>
         <button type="submit" class="btn">Register</button>
       </form>
+
+      <div id="scoreTable">
+        <ul>
+          <div id="scoreRow"></div>
+        </ul>
+      </div>
+
 
       <h2>Instructions</h2>
       <p>You must solve a minesweeper game with 16 rows and 30 columns with 99 bombs.</p>
@@ -30,7 +42,9 @@
       <p>You get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero</p>
       <p>When you finish a board (or a mine blows up) a new board will be generated automatically</p>
     </div>
-    <script src="jquery-1.7.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/template" id="row-template">
+      Yo <%= point %>
+    </script>
   </body>
 </html>
