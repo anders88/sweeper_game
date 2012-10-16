@@ -17,24 +17,6 @@
 
 (def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
-(def instructions
-  [:div [:h2 "Instructions"]
-    [:p (str "You must solve a minesweeper game with " board-rows " rows and " board-cols
-      " columns with " board-bombs " bombs.")]
-    [:p "You can use the following commands"]
-    [:ul [:li "To open a cell : http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
-     [:li "Let the server open a cell for you - http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;"]
-     [:li "Check how you board looks like now (used for debug) http://&lt;server-address&gt;/debugdisplay?id=&lt;your id&gt;"]
-    ]
-    [:p "You will receive an answer like this:"]
-    [:p "'Y=3,X=5,result=4'"]
-    [:p "This indicates that the sixth column on the fourth row has four bombs. The cell in the upper left corner has coordinate 0,0"]
-    [:p "If you get a result like :bomb or :open it means that you have opened a bomb or an already open field. Your score will then be set to 0 and a new board will be generated for you to start over"]
-    [:p "You get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero"]
-    [:p "When you finish a board (or a mine blows up) a new board will be generated automatically"]
-    ]
-  )
-
 (defn sort-by-score [player-values]
   (sort-by :points (fn [val1 val2] (* -1 (compare (val1 :total) (val2 :total))))
        player-values)
@@ -54,32 +36,6 @@
     (.replaceAll "Å" "&Åring;")
 
   ))
-
-(defn scoretable []
-  [:div {:id "scoreboard"}
-    [:table {:border 1}
-      [:tr [:th "Name"] [:th "Score"] [:th "Finished boards"] [:th "Max opens on one board"]]
-      (map (fn [player-map] [:tr
-        [:td (html-encode (player-map :name))]
-        [:td ((player-map :points) :total)]
-        [:td ((player-map :points) :finishedBoards)]
-        [:td ((player-map :points) :maxOnBoard)]
-        ]) (sort-by-score (vals (@status :players))))
-      ]
-
-    ]
-)
-
-(defpage "/showscoretable" []
-  (html5 (scoretable))
-  )
-
-(defn show-scoreboard []
-  [:p
-    (scoretable)
-    instructions
-    ]
-  )
 
 
 (defn new-playno [playno]
