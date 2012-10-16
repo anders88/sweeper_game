@@ -24,10 +24,17 @@ $ (function() {
 
     var ScoreTableView = Backbone.View.extend({
         initialize: function() {
-            scores.fetch({
-                async: false
-            });
+            scores.bind("reset",this.updateTable,this);
+            scores.fetch();
+            window.setInterval(function() {
+                scores.fetch();
+            },5000);
+
+        },
+
+        updateTable: function() {
             var scoreRow = $("#scoreRow");
+            scoreRow.html(" ");
             scores.each(function(row) {
                 var rowView = new ScoreRowView({model: row});
                 scoreRow.append(rowView.render().el);
