@@ -81,18 +81,6 @@
     ]
   )
 
-(defpage "/" []
-    (html5
-       [:head
-    [:title "Sweepergame"]
-    (include-js "/jquery-1.7.2.js") (include-js "/reload.js")]
-      [:body [:h1 "Welcome to Sweepergame"]
-    (form-to [:post "/register"]
-     (label "name" "Your name")
-     (text-field {:maxlength 20} "name")
-     (submit-button "Register"))
-    [:p (show-scoreboard)]])
-)
 
 (defn new-playno [playno]
   (if debug playno
@@ -215,8 +203,8 @@
     ]
 ))
 
-(defpage [:get "/mainpage"] {:as nopart}
-  (redirect "/mainPage.html")
+(defpage [:get "/"] {:as nopart}
+  (redirect "/index.html")
 )
 
 (defn gen-json-score [scores]
