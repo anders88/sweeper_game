@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sweepergame</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="jquery-1.7.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/backbone.js"></script>
+    <script src="js/mainpage.js"></script>
+  </head>
+  <body>
+    <div class="offset1">
+      <h1>Sweepergame</h1>
+      <form action="/register" method="POST">
+        <legend>Register</legend>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" maxLength="20" placeholder="Your name"/>
+        <button type="submit" class="btn">Register</button>
+      </form>
+
+      <legend>Scores</legend>
+
+      <div id="scoreTable" class="span6">
+        <table class="table table-bordered">
+          <thead>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Finished boards</th>
+            <th>Max opens on one board</th>
+          </thead>
+          <tbody id="scoreRow">
+          </tbody>
+        </table>
+      </div>
+
+
+      <legend>Instructions</legend>
+      <p>You must solve a minesweeper game with 16 rows and 30 columns with 99 bombs.</p>
+      <p>You can use the following commands</p>
+      <ul>
+        <li>To open a cell : http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;</li>
+        <li>Let the server open a cell for you - http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;</li>
+        <li>Check how you board looks like now (used for debug) http://&lt;server-address&gt;/debugdisplay?id=&lt;your id&gt;</li>
+      </ul>
+      <p>You will receive an answer like this:</p>
+      <p>'Y=3,X=5,result=4'</p>
+      <p>This indicates that the sixth column on the fourth row has four bombs. The cell in the upper left corner has coordinate 0,0</p>
+      <p>If you get a result like :bomb or :open it means that you have opened a bomb or an already open field. Your score will then be set to 0 and a new board will be generated for you to start over</p>
+      <p>You get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero</p>
+      <p>When you finish a board (or a mine blows up) a new board will be generated automatically</p>
+    </div>
+
+    <script type="text/template" id="row-template">
+      <td><%= name %></td>
+      <td><%= total %></td>
+      <td><%= finishedBoards %></td>
+      <td><%= maxOnBoard %></td>
+    </script>
+  </body>
+</html>
