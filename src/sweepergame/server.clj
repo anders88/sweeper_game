@@ -51,7 +51,7 @@
       :numplayers (inc (@status :numplayers))
       :players (assoc (@status :players)
       (str playno)
-      {:name (registerobject :name) :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0}})))
+      {:name (registerobject :name) :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
     (html5 [:body [:h1 "You have code " playno]
            [:p (link-to "/" "Scoreboard")]]))
   )
@@ -95,7 +95,7 @@
 (def max-score (in-third tiles-to-open))
 
 (defn calc-score [type-of-open open-res board old-score]
-  (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0)
+  (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
   (let [move-score
     (if (= :open type-of-open) (let [num-open (number-of-opens board)]
      (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
@@ -165,7 +165,11 @@
 
 (defn gen-json-score [scores]
   (generate-string (map (fn [val]
-                          {:name (val :name) :total ((val :points) :total) :finishedBoards ((val :points) :finishedBoards) :maxOnBoard ((val :points) :maxOnBoard)}
+                          {:name (val :name)
+                           :total ((val :points) :total)
+                           :finishedBoards ((val :points) :finishedBoards)
+                           :maxOnBoard ((val :points) :maxOnBoard)
+                           :bombed ((val :points) :bombed)}
                           ) scores)
                    )
 )
