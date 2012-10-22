@@ -43,18 +43,23 @@
   (+ (* (+ (rand-int 8000) 1000) 100) (+ playno 10)))
   )
 
-(defpage [:post "/register"] {:as registerobject}
+(defn register-new-player [new-player-name]
   (dosync
-    (let [playno (new-playno (inc (@status :numplayers)))]
+   (let [playno (new-playno (inc (@status :numplayers)))]
 
-    (ref-set status (assoc @status
-      :numplayers (inc (@status :numplayers))
-      :players (assoc (@status :players)
-      (str playno)
-      {:name (registerobject :name) :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
-    (html5 [:body [:h1 "You have code " playno]
-           [:p (link-to "/" "Scoreboard")]]))
-  )
+     (ref-set status (assoc @status
+                       :numplayers (inc (@status :numplayers))
+                       :players (assoc (@status :players)
+                                  (str playno)
+                                  {:name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
+     (html5 [:body [:h1 "You have code " playno]
+             [:p (link-to "/" "Scoreboard")]]))
+   )
+
+)
+
+(defpage [:post "/register"] {:as registerobject}
+  (register-new-player (registerobject :name))
 )
 
 

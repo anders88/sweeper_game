@@ -44,3 +44,9 @@
                         {:name "Darth" :points {:total 200 :finishedBoards 3 :maxOnBoard 5 :bombed 0}}
                         ])))
 ))
+
+(deftest test-add-player
+  (testing "That the player is added"
+    (let [res (register-new-player "Darth")]
+    (is (= 1 (@status :numplayers)))
+    )))
