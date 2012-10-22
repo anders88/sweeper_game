@@ -14,6 +14,9 @@
 (def hintsleep 400)
 (def opensleep 150)
 
+(defn player-object [player-no]
+  ((@status :players) (str "" player-no)))
+
 
 (def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
@@ -52,14 +55,16 @@
                        :players (assoc (@status :players)
                                   (str playno)
                                   {:name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
-     (html5 [:body [:h1 "You have code " playno]
-             [:p (link-to "/" "Scoreboard")]]))
+     playno
+     )
    )
 
 )
 
 (defpage [:post "/register"] {:as registerobject}
-  (register-new-player (registerobject :name))
+  (let [playno (register-new-player (registerobject :name))]
+   (html5 [:body [:h1 "You have code " playno]
+             [:p (link-to "/" "Scoreboard")]]))
 )
 
 

@@ -47,6 +47,7 @@
 
 (deftest test-add-player
   (testing "That the player is added"
-    (let [res (register-new-player "Darth")]
+    (let [playno (register-new-player "Darth")]
     (is (= 1 (@status :numplayers)))
+    (is (= "Darth" ((player-object playno) :name)))
     )))
