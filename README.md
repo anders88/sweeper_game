@@ -8,6 +8,16 @@
 4. lein run
 5. Go to http://localhost:1337
 
+# Getting started (Linux)
+
+1. Install leiningen
+  * Go to https://github.com/technomancy/leiningen 
+  * create/download the script (Follow the instruction in the Installation section) 
+2. git clone http://github.com/anders88/sweeper_game.git
+3. cd ...\sweeper_game
+4. lein run
+5. Go to http://localhost:1337
+
 # Playing
 
 1. Download a starting point from https://github.com/jhannes/minefield-solver
