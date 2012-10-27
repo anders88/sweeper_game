@@ -116,28 +116,28 @@
    ))
 )
 
+(defn update-player [result player-no player-map]
+  (dosync (ref-set status (assoc @status
+                            :players (assoc (@status :players)
+                                       player-no (assoc player-map :board (replace-if-finished result)
+                                                        :points (calc-score :hint (result :result) (result :board) (player-map :points))))))
+          ))
+
+
 (defpage [:get "/open"] {:as openpart}
-  (let [player-map ((@status :players) (openpart :id)) pos (read-coordinates openpart)]
+  (let [player-map (player-object (openpart :id)) pos (read-coordinates openpart)]
   (cond
     (nil? player-map) "Unknown player"
     (nil? pos) "Coordinates needed"
     :else (let [result (open pos (player-map :board))]
   (let [score (calc-score :open (result :result) (result :board) (player-map :points))]
-    (dosync (ref-set status (assoc @status
-      :players (assoc (@status :players)
-    (openpart :id) (assoc player-map :points score :board (replace-if-finished result))))))
+    (update-player result (openpart :id) player-map)
     (Thread/sleep opensleep)
     (str "Y=" (first (result :pos)) ",X=" (second (result :pos)) ",result=" (result :result))
   ))
   )
 ))
 
-(defn update-player [result player-no player-map]
-  (dosync (ref-set status (assoc @status
-                          :players (assoc (@status :players)
-                                     player-no (assoc player-map :board (replace-if-finished result)
-                                                      :points (calc-score :hint (result :result) (result :board) (player-map :points))))))
-        ))
 
 
 (defpage [:get "/hint"] {:as openpart}
