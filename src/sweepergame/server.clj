@@ -17,6 +17,39 @@
 (defn player-object [player-no]
   ((@status :players) (str "" player-no)))
 
+(defn new-playno [playno]
+  (if debug playno
+  (+ (* (+ (rand-int 8000) 1000) 100) (+ playno 10)))
+  )
+
+
+(defn register-new-player [new-player-name]
+  (dosync
+   (let [playno (new-playno (inc (@status :numplayers)))]
+
+     (ref-set status (assoc @status
+                       :numplayers (inc (@status :numplayers))
+                       :players (assoc (@status :players)
+                                  (str playno)
+                                  {:name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
+     playno
+     )
+   )
+
+)
+
+(defn update-player [result player-no player-map]
+  (dosync (ref-set status (assoc @status
+                            :players (assoc (@status :players)
+                                       player-no (assoc player-map :board (replace-if-finished result)
+                                                        :points (calc-score :hint (result :result) (result :board) (player-map :points))))))
+          ))
+
+(defn all-player-objects[]
+ (vals (@status :players))
+)
+
+
 
 (def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
@@ -41,25 +74,7 @@
   ))
 
 
-(defn new-playno [playno]
-  (if debug playno
-  (+ (* (+ (rand-int 8000) 1000) 100) (+ playno 10)))
-  )
 
-(defn register-new-player [new-player-name]
-  (dosync
-   (let [playno (new-playno (inc (@status :numplayers)))]
-
-     (ref-set status (assoc @status
-                       :numplayers (inc (@status :numplayers))
-                       :players (assoc (@status :players)
-                                  (str playno)
-                                  {:name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
-     playno
-     )
-   )
-
-)
 
 (defpage [:post "/register"] {:as registerobject}
   (let [playno (register-new-player (registerobject :name))]
@@ -116,12 +131,6 @@
    ))
 )
 
-(defn update-player [result player-no player-map]
-  (dosync (ref-set status (assoc @status
-                            :players (assoc (@status :players)
-                                       player-no (assoc player-map :board (replace-if-finished result)
-                                                        :points (calc-score :hint (result :result) (result :board) (player-map :points))))))
-          ))
 
 
 (defpage [:get "/open"] {:as openpart}
@@ -141,7 +150,7 @@
 
 
 (defpage [:get "/hint"] {:as openpart}
-  (let [player-map ((@status :players) (openpart :id))]
+  (let [player-map (player-object (openpart :id))]
   (if
     (nil? player-map) "Unknown player"
     (let [result (hint (player-map :board))]
@@ -167,7 +176,7 @@
     [:title "Sweepergame"]
     (include-js "/jquery-1.7.2.js") (include-js "/reload.js")]
     [:body
-    (let [player-map ((@status :players) (idpart :id))]
+    (let [player-map (player-object (idpart :id))]
     (if (nil? player-map) "Unknown player"
     (let [player-board (player-map :board) player-score (player-map :points)]
       (board-as-html (player-map :board))
@@ -191,7 +200,7 @@
 )
 
 (defpage [:get "/scorejson"] {:as nopart}
-  (gen-json-score (sort-by-score (vals (@status :players))))
+  (gen-json-score (sort-by-score (all-player-objects)))
 )
 
 (defn -main [& m]
