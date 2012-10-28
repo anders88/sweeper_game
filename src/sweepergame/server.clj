@@ -38,6 +38,24 @@
 
 )
 
+(defn in-third [x]
+  (* x x x)
+  )
+
+
+(defn calc-score [type-of-open open-res board old-score]
+  (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
+  (let [move-score
+    (if (= :open type-of-open) (let [num-open (number-of-opens board)]
+     (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
+    ) 0)]
+  (assoc old-score :total (+ (old-score :total) move-score)
+   :finishedBoards (if (finished? board) (inc (old-score :finishedBoards)) (old-score :finishedBoards))
+   :maxOnBoard (max (old-score :maxOnBoard) (number-of-opens board)))
+   ))
+)
+
+
 (defn update-player [result player-no player-map]
   (dosync (ref-set status (assoc @status
                             :players (assoc (@status :players)
@@ -112,24 +130,10 @@
     [(to-int y) (to-int x)]
   ))))
 
-(defn in-third [x]
-  (* x x x)
-  )
 
 (def tiles-to-open (- (* board-rows board-cols) board-bombs))
 (def max-score (in-third tiles-to-open))
 
-(defn calc-score [type-of-open open-res board old-score]
-  (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
-  (let [move-score
-    (if (= :open type-of-open) (let [num-open (number-of-opens board)]
-     (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
-    ) 0)]
-  (assoc old-score :total (+ (old-score :total) move-score)
-   :finishedBoards (if (finished? board) (inc (old-score :finishedBoards)) (old-score :finishedBoards))
-   :maxOnBoard (max (old-score :maxOnBoard) (number-of-opens board)))
-   ))
-)
 
 
 
