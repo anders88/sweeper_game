@@ -23,7 +23,7 @@
                 [0 0 0 0 :bomb 0 0 0]
                 [:bomb 0 0 :bomb 0 0 0 :bomb]
                 [:bomb 0 0 0 :bomb :bomb 0 0]
-                [0 0 0 0 0 0 0 0]  
+                [0 0 0 0 0 0 0 0]
                   ])
 
 (deftest test-feedback
@@ -60,7 +60,7 @@
 
 (deftest test-hint
   (testing "That hint gives an unexplored field"
-  (is (= {:result [1 2] :count 1 :board 
+  (is (= {:result [1 2] :count 1 :board
     [[:open :open :open] [:bomb :bomb :hint] [:open :open :open]]}  (hint [[:open :open :open] [:bomb :bomb 0] [:open :open :open]])))
   ))
 
@@ -70,3 +70,13 @@
     (is (finished? [[:bomb :open :open] [:hint :bomb :open] [:open :open :bomb]]) "All opened is finished")
     )
   )
+
+(deftest test-coordinates
+  (testing "That it gives all coordinates"
+    (is (= [[[0 0] [0 1] [0 2]] [[1 0] [1 1] [1 2]]]
+           (board-coordinates 2 3)))))
+
+(deftest test-debug-board
+  (testing "That it gives the right info to player"
+    (is (= [["u" 1 "u"] [0 "u" "u"]] (debug-board [[0 :open :bomb] [:hint 0 0]])
+            ))))
