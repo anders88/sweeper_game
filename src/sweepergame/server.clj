@@ -192,6 +192,12 @@
   (redirect "/index.html")
 )
 
+(defpage [:get "/deb"] {:as idpart}
+  (redirect (str "/debugoutput.html?id=" (idpart :id)))
+)
+
+
+
 (defn gen-json-score [scores]
   (generate-string (map (fn [val]
                           {:name (val :name)
