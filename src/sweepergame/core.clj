@@ -114,11 +114,11 @@
   )
 
 (defn debug-board [board]
-  (map (fn [row] (map (fn [pos]
+  (map (fn [row] {:row (map (fn [pos]
                         (let [content ((board (first pos)) (second pos))]
                           (if (or (= content :open) (= content :hint))
                             (count-neighbour-bombs board pos)
                             "u")
-                        )) row))
+                        )) row)})
 (board-coordinates (count board) (count (board 0)))
 ))

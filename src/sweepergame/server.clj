@@ -207,6 +207,11 @@
   (gen-json-score (sort-by-score (all-player-objects)))
 )
 
+(defpage [:get "/boarddebug"] {:as idpart}
+  (let [player-map (player-object (idpart :id))]
+    (if (nil? player-map) "Unknown board"
+        (generate-string (debug-board (player-map :board))))))
+
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
         port (Integer. (get (System/getenv) "PORT" "1337"))
