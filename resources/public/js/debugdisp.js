@@ -21,12 +21,13 @@ $ (function() {
 
         render: function() {
             var self = this;
-            //console.log("A row " + this.model.get("row"));
             $.each(this.model.get("row"),function(index,value) {
-                self.$el.append("<td>" + value + "</td>");
-                //console.log("Cell: " + value);
+                var displaystr = value;
+                if (value === "u") {
+                    displaystr = "?";
+                }
+                self.$el.append("<td>" + displaystr + "</td>");
             });
-            //this.$el.html("<td>Linje</td>");
             return this;
         }
     });
