@@ -54,7 +54,38 @@ $ (function() {
         }
     });
 
-    var appView = new BoardTableView({el: $("#boardTable")});
+    var HeadingView = Backbone.View.extend({
+        initialize: function() {
+            this.render();
+        },
+
+        render: function() {
+            this.$el.append("<h1>Hello " + this.model.get("playerId") + "<h1>");
+        }
+    });
+
+    var DebugDisplayView = Backbone.View.extend({
+        initialize: function() {
+            var self = this;
+            var appView = new BoardTableView({el: $("#boardTable")});
+            var headView = new HeadingView({
+                model: new Backbone.Model({
+                    playerId: self.model.get("playerId")
+                }),
+                el: $("#heading")
+            });
+        }
+    });
+
+
+
+    var mainModel = new Backbone.Model({
+        playerId: $.urlParam("id")
+    });
+
+    var mainView = new DebugDisplayView({
+        model: mainModel
+    });
 
 
     //$("#idhere").html($.urlParam("id"));
