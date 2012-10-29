@@ -60,19 +60,45 @@ $ (function() {
         },
 
         render: function() {
-            this.$el.append("<h1>Hello " + this.model.get("playerId") + "<h1>");
+            this.$el.append("<h1>Hello " + this.model.get("playerId") + "</h1>");
+        }
+    });
+
+    var CommandsView = Backbone.View.extend({
+        tagName: "div",
+
+        template: _.template($('#commandTemplate').html()),
+
+        el: $("#commandsPart"),
+
+        initialize: function() {
+            this.render();
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
         }
     });
 
     var DebugDisplayView = Backbone.View.extend({
         initialize: function() {
             var self = this;
-            var appView = new BoardTableView({el: $("#boardTable")});
+            var boardView = new BoardTableView({el: $("#boardTable")});
+
             var headView = new HeadingView({
                 model: new Backbone.Model({
                     playerId: self.model.get("playerId")
                 }),
                 el: $("#heading")
+            });
+
+
+            var commandsView = new CommandsView({
+                model: new Backbone.Model({
+                    playerId: self.model.get("playerId"),
+                    host : self.model.get("host")
+                })
             });
         }
     });
@@ -80,7 +106,8 @@ $ (function() {
 
 
     var mainModel = new Backbone.Model({
-        playerId: $.urlParam("id")
+        playerId: $.urlParam("id"),
+        host: window.location.origin
     });
 
     var mainView = new DebugDisplayView({
