@@ -71,6 +71,11 @@ $ (function() {
 
         el: $("#commandsPart"),
 
+        events: {
+            "change #givX" : "setX",
+            "change #givY" : "setY"
+        },
+
         initialize: function() {
             this.render();
         },
@@ -78,7 +83,19 @@ $ (function() {
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
+        },
+
+        setX: function(e) {
+            this.model.set({xpos: $("#givX").val()});
+            this.render();
+        },
+
+        setY: function(e) {
+            this.model.set({ypos: $("#givY").val()});
+            this.render();
         }
+
+
     });
 
     var DebugDisplayView = Backbone.View.extend({
@@ -97,7 +114,9 @@ $ (function() {
             var commandsView = new CommandsView({
                 model: new Backbone.Model({
                     playerId: self.model.get("playerId"),
-                    host : self.model.get("host")
+                    host : self.model.get("host"),
+                    xpos : 0,
+                    ypos : 0
                 })
             });
         }

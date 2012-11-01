@@ -96,9 +96,8 @@
 
 (defpage [:post "/register"] {:as registerobject}
   (let [playno (register-new-player (registerobject :name))]
-   (html5 [:body [:h1 "You have code " playno]
-             [:p (link-to "/" "Scoreboard")]]))
-)
+    (redirect (str "/deb?id=" playno))
+))
 
 
 
