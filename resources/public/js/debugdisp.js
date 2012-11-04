@@ -22,11 +22,13 @@ $ (function() {
         render: function() {
             var self = this;
             $.each(this.model.get("row"),function(index,value) {
-                var displaystr = value;
+                var displaystr;
                 if (value === "u") {
-                    displaystr = "?";
+                    displaystr = "<td style='color: white; background: black;'>?</td>";
+                } else {
+                    displaystr = "<td style='color: red;'>" + value + "</td>";
                 }
-                self.$el.append("<td>" + displaystr + "</td>");
+                self.$el.append(displaystr);
             });
             return this;
         }
