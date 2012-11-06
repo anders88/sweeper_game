@@ -25,9 +25,9 @@ $ (function() {
     var ScoreTableView = Backbone.View.extend({
         initialize: function() {
             scores.bind("reset",this.updateTable,this);
-            scores.fetch();
+            scores.fetch({cache: false});
             window.setInterval(function() {
-                scores.fetch();
+                scores.fetch({cache: false});
             },5000);
 
         },

@@ -39,7 +39,7 @@ $ (function() {
     var BoardTableView = Backbone.View.extend({
         initialize: function() {
             board.bind("reset",this.updateTable,this);
-            board.fetch();
+            board.fetch({cache: false});
             /*window.setInterval(function() {
                 scores.fetch();
             },5000);*/
