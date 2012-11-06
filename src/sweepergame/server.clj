@@ -43,25 +43,30 @@
   )
 
 
-(defn calc-score [type-of-open open-res board old-score]
+(defn calc-score
+  [type-of-open open-res board old-score given-move-score]
   (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
-  (let [move-score
-    (if (= :open type-of-open) (let [num-open (number-of-opens board)]
-     (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
-    ) 0)]
-  (assoc old-score :total (+ (old-score :total) move-score)
+  (assoc old-score :total (+ (old-score :total) given-move-score)
    :finishedBoards (if (finished? board) (inc (old-score :finishedBoards)) (old-score :finishedBoards))
    :maxOnBoard (max (old-score :maxOnBoard) (number-of-opens board)))
-   ))
+   )
+)
+
+(defn move-score [board]
+  (let [num-open (number-of-opens board)]
+     (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
+    )
 )
 
 
-(defn update-player [result player-no player-map]
+(defn update-player
+  ([result player-no player-map] (update-player result player-no player-map 0))
+  ([result player-no player-map given-move-score]
   (dosync (ref-set status (assoc @status
                             :players (assoc (@status :players)
                                        player-no (assoc player-map :board (replace-if-finished result)
-                                                        :points (calc-score :hint (result :result) (result :board) (player-map :points))))))
-          ))
+                                                        :points (calc-score :hint (result :result) (result :board) (player-map :points) given-move-score)))))
+          )))
 
 (defn all-player-objects[]
  (vals (@status :players))
@@ -142,8 +147,8 @@
     (nil? player-map) "Unknown player"
     (nil? pos) "Coordinates needed"
     :else (let [result (open pos (player-map :board))]
-  (let [score (calc-score :open (result :result) (result :board) (player-map :points))]
-    (update-player result (openpart :id) player-map)
+  (let [score (move-score (result :board))]
+    (update-player result (openpart :id) player-map score)
     (Thread/sleep opensleep)
     (str "Y=" (first (result :pos)) ",X=" (second (result :pos)) ",result=" (result :result))
   ))
