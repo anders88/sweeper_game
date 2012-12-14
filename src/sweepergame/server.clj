@@ -223,23 +223,10 @@
     (if (nil? player-map) "Unknown board"
         (generate-string (debug-board (player-map :board))))))
 
-(defn keyval [x]
-  (let [pair (clojure.string/split x #"=")] [(keyword (first pair)) (second pair)])
-  )
 
-(defn read-enviroment-variables [args]
-  (if (and (first args) (.exists (new java.io.File (first args))))
-    (apply hash-map (flatten (map keyval (clojure.string/split-lines (slurp (first args))))))
-    (let [res {:mode :dev :secured false :password-file "password.txt"}]
-    (println "Did not find setupfile. Using standart setup. Use 'lein run <setupfile>' to supply a setupfile. Running with admin disabled - server must restart manually")
-    res)
 
-  )
-  )
-
-(defn -main [& m]
-  (let [envread (read-enviroment-variables m)]
-    (dosync (ref-set enviroment envread)))
+(defn startup [supplied-enviroment]
+   (dosync (ref-set enviroment supplied-enviroment))
   
   (let [mode (@enviroment :mode)
         port (Integer. (get (System/getenv) "PORT" "8080"))
