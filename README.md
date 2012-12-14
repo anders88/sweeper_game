@@ -26,3 +26,6 @@
 4. Change the userid in the application to what you were given by the application
 5. Run the program
 6. Change the program
+
+# Administrative functions (optional)
+Update password file : lein trampoline run setPassword <setupfile>
