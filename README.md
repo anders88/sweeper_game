@@ -28,4 +28,4 @@
 6. Change the program
 
 # Administrative functions (optional)
-Update password file : lein trampoline run setPassword <setupfile>
+Update password : lein trampoline run setPassword setupfile

@@ -224,6 +224,11 @@
         (generate-string (debug-board (player-map :board))))))
 
 
+(defpage [:get "/login"] {:as nopart}
+  (redirect "/login.html")
+)
+
+
 
 (defn startup [supplied-enviroment]
    (dosync (ref-set enviroment supplied-enviroment))
