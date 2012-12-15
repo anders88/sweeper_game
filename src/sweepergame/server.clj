@@ -228,6 +228,16 @@
   (redirect "/login.html")
 )
 
+(defpage [:post "/doLogin"] {:as login-post}
+  (html5
+    [:body
+      [:h1 "Password ..."]
+      [:p (if (noir.util.crypt/compare (login-post :password) (slurp (@enviroment :password-file)))
+        "Are the same" "Are different")
+        ]
+    ]
+    )
+  )
 
 
 (defn startup [supplied-enviroment]
