@@ -14,6 +14,7 @@
 (def debug false)
 (def hintsleep 400)
 (def opensleep 150)
+(def session-length 120)
 
 (defn player-object [player-no]
   ((@status :players) (str "" player-no)))
@@ -229,15 +230,36 @@
 )
 
 (defpage [:post "/doLogin"] {:as login-post}
+  (if (noir.util.crypt/compare (login-post :password) (slurp (@enviroment :password-file)))
+  (let [session-expires (.plusSeconds (new org.joda.time.DateTime) session-length)]
+    (noir.session/put! :sess-end session-expires)
+    (redirect "/admin")
+    )
   (html5
     [:body
-      [:h1 "Password ..."]
-      [:p (if (noir.util.crypt/compare (login-post :password) (slurp (@enviroment :password-file)))
-        "Are the same" "Are different")
+      [:h1 "Error logging in"]
         ]
-    ]
-    )
+  )    
+))
+
+(defn logged-in? []
+  (.isBefore (new org.joda.time.DateTime) (noir.session/get :sess-end (.minusSeconds (new org.joda.time.DateTime) 100)))
   )
+
+(defpage [:get "/admin"] {:as nopart}
+  (if (logged-in?)
+  (html5
+    [:body
+      [:h1 "Adminpage"]
+      [:p "something...."]
+    ]    
+    )
+  (html5
+    [:body
+      [:h1 "Not logged in"]
+        ]
+    )    
+  ))
 
 
 (defn startup [supplied-enviroment]
