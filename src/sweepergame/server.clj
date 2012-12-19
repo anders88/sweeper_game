@@ -182,18 +182,8 @@
 )
 
 (defpage [:get "/debugdisplay"] {:as idpart}
-  (html5
-    [:head
-    [:title "Sweepergame"]
-    (include-js "/jquery-1.7.2.js") (include-js "/reload.js")]
-    [:body
-    (let [player-map (player-object (idpart :id))]
-    (if (nil? player-map) "Unknown player"
-    (let [player-board (player-map :board) player-score (player-map :points)]
-      (board-as-html (player-map :board))
-    )))
-    ]
-))
+  (redirect (str "/debugoutput.html?id=" (idpart :id)))
+)
 
 (defpage [:get "/"] {:as nopart}
   (redirect "/index.html")
