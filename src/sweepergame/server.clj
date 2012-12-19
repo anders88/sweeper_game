@@ -229,18 +229,25 @@
   (redirect "/login.html")
 )
 
+(defpartial errorpage [message]
+  (html5
+    [:body
+      [:h1 message]
+        ]
+    )    
+  
+  )
+
+
 (defpage [:post "/doLogin"] {:as login-post}
   (if (noir.util.crypt/compare (login-post :password) (slurp (@enviroment :password-file)))
   (let [session-expires (.plusSeconds (new org.joda.time.DateTime) session-length)]
     (noir.session/put! :sess-end session-expires)
     (redirect "/admin")
     )
-  (html5
-    [:body
-      [:h1 "Error logging in"]
-        ]
-  )    
+  (errorpage "Error logging in")    
 ))
+
 
 (defn logged-in? []
   (.isBefore (new org.joda.time.DateTime) (noir.session/get :sess-end (.minusSeconds (new org.joda.time.DateTime) 100)))
@@ -254,11 +261,7 @@
       [:p "something...."]
     ]    
     )
-  (html5
-    [:body
-      [:h1 "Not logged in"]
-        ]
-    )    
+    (errorpage "Not logged in")    
   ))
 
 
