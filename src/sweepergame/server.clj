@@ -9,7 +9,8 @@
    )
   (:require [noir.server :as server]))
 
-(def status (ref {:numplayers 0 :players {}}))
+(def starting-state {:numplayers 0 :players {}})
+(def status (ref starting-state))
 (def enviroment (ref {}))
 (def debug false)
 (def hintsleep 400)
@@ -265,8 +266,19 @@
         )
     ]    
     )
-    (errorpage "Not logged in")    
-  ))
+    (redirect "/login")    
+    ))
+
+(defpage [:post "/resetGame"] {:as resetpart}
+  (cond 
+    (not (logged-in?)) (errorpage "Not logged in")
+    (not (= (resetpart :resetText) "reset")) (errorpage "Please type reset in textfield to confirm")
+    :else (dosync 
+      (ref-set status starting-state)
+      (html5 [:body [:h1 "Game restarted"]])
+      )
+    )
+  )
 
 
 (defn startup [supplied-enviroment]
