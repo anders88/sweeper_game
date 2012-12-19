@@ -220,10 +220,20 @@
   (redirect "/login.html")
 )
 
+(defpartial page-header[] 
+  [:head 
+  [:link {:href "css/bootstrap.min.css" :rel "stylesheet"}]
+  [:script {:src "jquery-1.7.2.js"}]
+  [:script {:src "js/bootstrap.min.js"}]
+    ]
+  )
+
 (defpartial errorpage [message]
   (html5
+    (page-header)
     [:body
       [:h1 message]      
+      [:p (link-to "/" "Return to main")]
         ]
     )    
   
@@ -247,6 +257,7 @@
 (defpage [:get "/admin"] {:as nopart}
   (if (logged-in?)
   (html5
+    (page-header)
     [:body
       [:h1 "Adminpage"]
       (form-to [:post "/resetGame"]
@@ -254,6 +265,7 @@
         (text-field "resetText")
         (submit-button "Reset")
         )
+      (link-to "/" "Return to main")
     ]    
     )
     (redirect "/login")    
