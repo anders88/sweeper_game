@@ -232,7 +232,7 @@
 (defpartial errorpage [message]
   (html5
     [:body
-      [:h1 message]
+      [:h1 message]      
         ]
     )    
   
@@ -258,7 +258,11 @@
   (html5
     [:body
       [:h1 "Adminpage"]
-      [:p "something...."]
+      (form-to [:post "/resetGame"]
+        (label "resetText" "Type reset to reset game")
+        (text-field "resetText")
+        (submit-button "Reset")
+        )
     ]    
     )
     (errorpage "Not logged in")    
