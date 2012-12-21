@@ -28,4 +28,19 @@
 6. Change the program
 
 # Administrative functions (optional)
-Update password : lein trampoline run setPassword setupfile
+Adminconsole can be used to restart the game without restarting your server. If you're running the server on your laptop, you problably don't need it (You just restart your server).
+You start the server with:
+	
+	lein run start <setupfile>
+
+The setupfile must point to a file with the following structure
+	password-file=<passwordfile>
+	mode=<:dev or :prod>
+	secured=true
+
+To generate your password you run
+
+	lein trampoline run setPassword <setupfile>
+
+This will prompt for a password and store this.
+
