@@ -55,10 +55,11 @@
    )
 )
 
-(defn move-score [board]
+(defn move-score [board reopened]
+  (if reopened 0
   (let [num-open (number-of-opens board)]
      (- (in-third num-open) (if (> num-open 0) (in-third (dec num-open)) 0))
-    )
+    ))
 )
 
 
@@ -150,7 +151,7 @@
     (nil? player-map) "Unknown player"
     (nil? pos) "Coordinates needed"
     :else (let [result (open pos (player-map :board) (@enviroment :allow-reopen))]
-  (let [score (move-score (result :board))]
+  (let [score (move-score (result :board) (result :reopened))]
     (update-player result (openpart :id) player-map score)
     (Thread/sleep opensleep)
     (str "Y=" (first (result :pos)) ",X=" (second (result :pos)) ",result=" (result :result))
