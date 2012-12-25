@@ -292,10 +292,14 @@
   )
 
 (defpage [:post "/updateRules"] {:as updatepart}
-  (if (logged-in?) (html5 [:body [:h1 (str "Rules updated '" (if (updatepart :reopenCheckbox) "on" "off") "'")]])
+  (if (logged-in?) 
+    (dosync 
+      (ref-set enviroment (assoc @enviroment :allow-reopen (updatepart :reopenCheckbox)))
+        (html5 (page-header) [:body [:h1 "Rules updated"] [:p (link-to "/" "Return to main")]])
+    ) 
     (errorpage "Not logged in")
-    )
   )
+)
 
 
 (defn startup [supplied-enviroment]
