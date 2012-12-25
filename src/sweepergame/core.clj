@@ -32,16 +32,17 @@
   ))
 
 (defn open [pos board allow-reopen]
-  (cond (offboard? pos) {:result :bomb :board board :pos pos}
-        (bomb? pos board) {:result :bomb :board board :pos pos}
+  (cond (offboard? pos) {:result :bomb :board board :pos pos :reopened false}
+        (bomb? pos board) {:result :bomb :board board :pos pos :reopened false}
         (and allow-reopen (or (contains-what? :open pos board) (contains-what? :hint pos board))) 
             {:result (count (filter #(bomb? % board) (neighbours pos))) :board board :pos pos :reopened true}
                                                               
-        (or (contains-what? :open pos board) (contains-what? :hint pos board)) {:result :open :board board :pos pos}         
+        (or (contains-what? :open pos board) (contains-what? :hint pos board)) {:result :open :board board :pos pos :reopened false}         
     :else
     {:result (count (filter #(bomb? % board) (neighbours pos)))
     :board (calculate-board board pos :open)
     :pos pos
+    :reopened false
     })
 )
 
