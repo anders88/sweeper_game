@@ -16,7 +16,7 @@
     )
   )
 
-(def big-board [[0 0 0 0 0 0 0 0]
+(def big-board [[0 0 0 :open 0 0 0 0]
                 [0 0 0 0 0 0 0 0]
                 [:bomb 0 0 :bomb 0 0 0 :bomb]
                 [0 0 0 0 0 0 0 0]
@@ -36,6 +36,12 @@
     (is (not (nil? ((open [0 0] (random-board 8 8 10) false) :result))) "Big board random")
 
 ))
+
+(deftest test-reopen
+  (testing "That reopening can be okay"
+    (is (= {:result 0 :pos [0 3] :board big-board :reopened true} (open [0 3] big-board true)) "Repoening a cell")
+    )
+  )
 
 (deftest test-calculate-board
   (testing "That the board is updated"
