@@ -149,7 +149,7 @@
   (cond
     (nil? player-map) "Unknown player"
     (nil? pos) "Coordinates needed"
-    :else (let [result (open pos (player-map :board))]
+    :else (let [result (open pos (player-map :board) (@enviroment :allow-reopen))]
   (let [score (move-score (result :board))]
     (update-player result (openpart :id) player-map score)
     (Thread/sleep opensleep)
@@ -265,7 +265,8 @@
         (text-field "resetText")
         (submit-button "Reset")
         )
-      (link-to "/" "Return to main")
+      [:h2 "Game rules"]
+      [:p (link-to "/" "Return to main")]
     ]    
     )
     (@enviroment :secured) (redirect "/login")

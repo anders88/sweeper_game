@@ -12,11 +12,15 @@
   (if (and (second args) (.exists (new java.io.File (second args))))
     (apply hash-map (flatten (map keyval (clojure.string/split-lines (slurp (second args))))))
     (let [res {:mode :dev :secured false :password-file "password.txt"}]
-    (println "Did not find setupfile. Using standart setup. Use 'lein run start <setupfile>' to supply a setupfile. Running with admin disabled - you must restart server manually")
+    (println "Did not find setupfile. Using standard setup. Use 'lein run start <setupfile>' to supply a setupfile. Running with admin disabled - you must restart server manually")
     res)
 
   )
   )
+
+(defn read-env-add-defaults [args]
+	(assoc (read-enviroment-variables args) :allow-reopen false)
+	)
 
 (defn update-password-file [enviroment-read]
 	(println "Type new password:")
@@ -29,7 +33,7 @@
 )
 
 (defn -main [& m]
-	(let [enviroment-read (read-enviroment-variables m)]
+	(let [enviroment-read (read-env-add-defaults m)]
 		(if (= "setPassword" (first m))
 			(update-password-file enviroment-read)
 			(startup enviroment-read)

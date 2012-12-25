@@ -31,7 +31,7 @@
     (or (< x 0) (< y 0) (>= x board-cols) (>= y board-rows))
   ))
 
-(defn open [pos board]
+(defn open [pos board allow-reopen]
   (cond (offboard? pos) {:result :bomb :board board :pos pos}
         (bomb? pos board) {:result :bomb :board board :pos pos}
         (contains-what? :open pos board) {:result :open :board board :pos pos}
