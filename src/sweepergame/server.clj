@@ -266,6 +266,13 @@
         (submit-button "Reset")
         )
       [:h2 "Game rules"]
+      (form-to [:post "/updateRules"]
+        [:p
+        (label "reopenCheckbox" "Reopen")
+        (check-box "reopenCheckbox" (@enviroment :allow-reopen))
+        ]
+        (submit-button "Update rules")
+        )
       [:p (link-to "/" "Return to main")]
     ]    
     )
@@ -281,6 +288,12 @@
       (ref-set status starting-state)
       (html5 [:body [:h1 "Game restarted"]])
       )
+    )
+  )
+
+(defpage [:post "/updateRules"] {:as updatepart}
+  (if (logged-in?) (html5 [:body [:h1 (str "Rules updated '" (if (updatepart :reopenCheckbox) "on" "off") "'")]])
+    (errorpage "Not logged in")
     )
   )
 
