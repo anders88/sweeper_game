@@ -255,7 +255,7 @@
   )
 
 (defpage [:get "/admin"] {:as nopart}
-  (if (logged-in?)
+  (cond (logged-in?)
   (html5
     (page-header)
     [:body
@@ -268,7 +268,8 @@
       (link-to "/" "Return to main")
     ]    
     )
-    (redirect "/login")    
+    (@enviroment :secured) (redirect "/login")
+    :else (errorpage "You must run with secured server to use adminpage (See Administrative functions in help)")
     ))
 
 (defpage [:post "/resetGame"] {:as resetpart}
