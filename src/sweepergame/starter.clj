@@ -11,7 +11,7 @@
 (defn read-enviroment-variables [args]
   (if (and (second args) (.exists (new java.io.File (second args))))
     (apply hash-map (flatten (map keyval (clojure.string/split-lines (slurp (second args))))))
-    (let [res {:mode :dev :secured false :password-file "password.txt" :rows 16 :cols 30 :bombs 99}]
+    (let [res {:mode :dev :secured false :password-file "password.txt" :rows 16 :cols 30 :bombs 99 :hintsleep 400 :opensleep 150}]
     (println "Did not find setupfile. Using standard setup. Use 'lein run start <setupfile>' to supply a setupfile. Running with admin disabled - you must restart server manually")
     res)
 

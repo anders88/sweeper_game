@@ -13,8 +13,6 @@
 (def status (ref starting-state))
 (def enviroment (ref {}))
 (def debug false)
-(def hintsleep 400)
-(def opensleep 150)
 (def session-length 120)
 
 (defn player-object [player-no]
@@ -148,7 +146,7 @@
     :else (let [result (open pos (player-map :board) (@enviroment :allow-reopen))]
   (let [score (move-score (result :board) (result :reopened))]
     (update-player result (openpart :id) player-map score)
-    (Thread/sleep opensleep)
+    (Thread/sleep (@enviroment :opensleep))
     (str "Y=" (first (result :pos)) ",X=" (second (result :pos)) ",result=" (result :result))
   ))
   )
@@ -162,7 +160,7 @@
     (nil? player-map) "Unknown player"
     (let [result (hint (player-map :board))]
     (update-player result (openpart :id) player-map)
-    (Thread/sleep hintsleep)
+    (Thread/sleep (@enviroment :hintsleep))
     (str "Y=" (first (result :result)) ",X=" (second (result :result)) ",result=" (result :count))
   )))
   )
@@ -274,6 +272,10 @@
         (text-field "cols" (@enviroment :cols))]
         [:p (label "bombs" "Bombs")
         (text-field "bombs" (@enviroment :bombs))]
+        [:p (label "hintsleep" "Hintsleep")
+        (text-field "hintsleep" (@enviroment :hintsleep))]
+        [:p (label "opensleep" "Opensleep")
+        (text-field "opensleep" (@enviroment :opensleep))]
         (submit-button "Update rules")
         )
       [:p (link-to "/" "Return to main")]
@@ -300,6 +302,8 @@
       (ref-set enviroment 
         (assoc @enviroment 
           :allow-reopen (updatepart :reopenCheckbox) 
+          :hintsleep (Integer/parseInt (updatepart :hintsleep)) 
+          :opensleep (Integer/parseInt (updatepart :opensleep)) 
           :cols (Integer/parseInt (updatepart :cols)) 
           :rows (Integer/parseInt (updatepart :rows)) 
           :bombs (Integer/parseInt (updatepart :bombs))))

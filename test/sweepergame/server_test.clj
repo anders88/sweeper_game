@@ -3,7 +3,10 @@
         sweepergame.server))
 
 (defn reset-status [f]
-  (dosync (ref-set status {:numplayers 0 :players {}}))
+  (dosync 
+    (ref-set status {:numplayers 0 :players {}})
+    (ref-set enviroment {:mode :dev :secured false :password-file "password.txt" :rows 16 :cols 30 :bombs 99 :hintsleep 400 :opensleep 150})
+    )
   (f)
 )
 
