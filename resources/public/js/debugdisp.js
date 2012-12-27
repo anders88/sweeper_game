@@ -22,12 +22,7 @@ $ (function() {
         render: function() {
             var self = this;
             $.each(this.model.get("row"),function(index,value) {
-                var displaystr;
-                if (value === "u") {
-                    displaystr = "<td style='color: white; background: black;'>?</td>";
-                } else {
-                    displaystr = "<td style='color: red;'>" + value + "</td>";
-                }
+                var displaystr = "<td class='" + value[1] + "'>" + value[0] + "</td>";
                 self.$el.append(displaystr);
             });
             return this;
