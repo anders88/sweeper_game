@@ -36,7 +36,7 @@
                                     :name new-player-name 
                                     :game-over false
                                     :board (gen-new-board (@enviroment :rows) (@enviroment :cols) (@enviroment :bombs))
-                                    :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
+                                    :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0 :minimumHints 999}})))
      playno
      )
    )
@@ -53,6 +53,7 @@
   (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
   (assoc old-score :total (+ (old-score :total) given-move-score)
    :finishedBoards (if (finished? board) (inc (old-score :finishedBoards)) (old-score :finishedBoards))
+   :minimumHints (min (old-score :minimumHints) (- (cells-on-board board) (number-of-opens board)))
    :maxOnBoard (max (old-score :maxOnBoard) (number-of-opens board)))
    )
 )
@@ -140,7 +141,7 @@
   (let [player-map (player-object (openpart :id)) pos (read-coordinates openpart)]
   (cond
     (nil? player-map) "Unknown player"
-    (player-map :game-over) "Board is finished" 
+    (player-map :game-over) "Board is finished - call /newBoard?id= to get a new board" 
     (nil? pos) "Coordinates needed"
     :else (let [result (open pos (player-map :board) (@enviroment :allow-reopen))]
   (let [score (move-score (result :board) (result :reopened))]
@@ -168,7 +169,7 @@
   (let [player-map (player-object (openpart :id))]
   (cond
     (nil? player-map) "Unknown player"
-    (player-map :game-over) "Board is finished" 
+    (player-map :game-over) "Board is finished - call /newBoard?id= to get a new board" 
     :else (let [result (hint (player-map :board))]
     (update-player result (openpart :id) player-map)
     (Thread/sleep (@enviroment :hintsleep))
@@ -208,6 +209,7 @@
                            :playerClass (if (= id (str (val :id))) "player self" "player")
                            :total ((val :points) :total)
                            :finishedBoards ((val :points) :finishedBoards)
+                           :minimumHints ((val :points) :minimumHints)
                            :maxOnBoard ((val :points) :maxOnBoard)
                            :bombed ((val :points) :bombed)}
                           ) scores)

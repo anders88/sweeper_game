@@ -92,6 +92,10 @@
   (not (contains? (set (reduce concat board)) 0))
   )
 
+(defn cells-on-board [board]
+  (count (filter #(not (= % :bomb)) (reduce concat board)))
+  )
+
 (defn number-of-hints [board]
   (count (filter #(= % :hint) (reduce concat board)))
   )
