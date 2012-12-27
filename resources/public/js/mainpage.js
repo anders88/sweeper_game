@@ -5,6 +5,10 @@ $.urlParam = function(name){
     return results ? results[1] || 0 : 0;
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 $ (function() {
 
     var ScoreRowModel = Backbone.Model.extend({});
