@@ -34,7 +34,10 @@
                        :numplayers (inc (@status :numplayers))
                        :players (assoc (@status :players)
                                   (str playno)
-                                  {:id playno :name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
+                                  {:id playno
+                                    :name new-player-name 
+                                    :board (gen-new-board (@enviroment :rows) (@enviroment :cols) (@enviroment :bombs))
+                                    :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
      playno
      )
    )
@@ -68,7 +71,8 @@
   ([result player-no player-map given-move-score]
   (dosync (ref-set status (assoc @status
                             :players (assoc (@status :players)
-                                       player-no (assoc player-map :board (replace-if-finished result)
+                                       player-no (assoc player-map 
+                                                        :board (replace-if-finished result (@enviroment :rows) (@enviroment :cols) (@enviroment :bombs))
                                                         :points (calc-score :hint (result :result) (result :board) (player-map :points) given-move-score)))))
           )))
 
@@ -76,9 +80,6 @@
  (vals (@status :players))
 )
 
-
-
-(def tiles-to-open (count (filter #(= 0 %) (reduce concat (gen-new-board)))))
 
 (defn sort-by-score [player-values]
   (sort-by :points (fn [val1 val2] (* -1 (compare (val1 :total) (val2 :total))))
@@ -139,12 +140,6 @@
   ))))
 
 
-(def tiles-to-open (- (* board-rows board-cols) board-bombs))
-(def max-score (in-third tiles-to-open))
-
-
-
-
 (defpage [:get "/open"] {:as openpart}
   (let [player-map (player-object (openpart :id)) pos (read-coordinates openpart)]
   (cond
@@ -194,6 +189,8 @@
   (redirect (str "/debugoutput.html?id=" (idpart :id)))
 )
 
+(defpage [:get "/instructions.json"] {:as nopart}
+  (generate-string {:cols (@enviroment :cols) :rows (@enviroment :rows) :bombs (@enviroment :bombs)}))
 
 
 (defn gen-json-score [scores id]
@@ -269,10 +266,14 @@
         )
       [:h2 "Game rules"]
       (form-to [:post "/updateRules"]
-        [:p
-        (label "reopenCheckbox" "Reopen")
-        (check-box "reopenCheckbox" (@enviroment :allow-reopen))
-        ]
+        [:p (label "reopenCheckbox" "Reopen")
+        (check-box "reopenCheckbox" (@enviroment :allow-reopen))]
+        [:p (label "rows" "Rows")
+        (text-field "rows" (@enviroment :rows))]
+        [:p (label "cols" "Cols")
+        (text-field "cols" (@enviroment :cols))]
+        [:p (label "bombs" "Bombs")
+        (text-field "bombs" (@enviroment :bombs))]
         (submit-button "Update rules")
         )
       [:p (link-to "/" "Return to main")]
@@ -296,7 +297,12 @@
 (defpage [:post "/updateRules"] {:as updatepart}
   (if (logged-in?) 
     (dosync 
-      (ref-set enviroment (assoc @enviroment :allow-reopen (updatepart :reopenCheckbox)))
+      (ref-set enviroment 
+        (assoc @enviroment 
+          :allow-reopen (updatepart :reopenCheckbox) 
+          :cols (Integer/parseInt (updatepart :cols)) 
+          :rows (Integer/parseInt (updatepart :rows)) 
+          :bombs (Integer/parseInt (updatepart :bombs))))
         (html5 (page-header) [:body [:h1 "Rules updated"] [:p (link-to "/" "Return to main")]])
     ) 
     (errorpage "Not logged in")

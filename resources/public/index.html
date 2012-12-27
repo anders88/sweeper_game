@@ -9,6 +9,7 @@
     <script src="js/underscore.js"></script>
     <script src="js/backbone.js"></script>
     <script src="js/mainpage.js"></script>
+    <script src="js/instructions.js"></script>
   </head>
   <body>
     <div class="offset1">
@@ -41,7 +42,7 @@
           </thead>
           <tbody id="scoreRow">
             <script type="text/template" id="row-template">
-              <td class="<% class %>"><%= name %></td>
+              <td class="<%= playerClass %>"><%= name %></td>
               <td style="text-align:right;"><%= total %></td>
               <td style="text-align:right;"><%= finishedBoards %></td>
               <td style="text-align:right;"><%= maxOnBoard %></td>
@@ -53,12 +54,15 @@
 
 
       <legend>Instructions</legend>
-      <p>You must solve a minesweeper game with 16 rows and 30 columns with 99 bombs.</p>
+      <div id="instructionsPart"></div>
+      <script type="text/template" id="instructionsTemplate">
+
+      <p>You must solve a minesweeper game with <%= rows %> rows and <%= cols %> columns with <%= bombs %> bombs.</p>
       <p>You can use the following commands</p>
       <ul>
-        <li>To open a cell : http://&lt;server-address&gt;/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;</li>
-        <li>Let the server open a cell for you - http://&lt;server-address&gt;/hint?id=&lt;your id&gt;</li>
-        <li>Check how you board looks like now (used for debug) http://&lt;server-address&gt;/debugoutput.html?id=&lt;your id&gt;</li>
+        <li>To open a cell : <%= host %>/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;</li>
+        <li>Let the server open a cell for you - <%= host %>/hint?id=&lt;your id&gt;</li>
+        <li>Check how you board looks like now (used for debug) <%= host %>/debugoutput.html?id=&lt;your id&gt;</li>
       </ul>
       <p>You will receive an answer like this:</p>
       <p>'Y=3,X=5,result=4'</p>
@@ -66,7 +70,7 @@
       <p>If you get a result like :bomb or :open it means that you have opened a bomb or an already open field. Your score will then be set to 0 and a new board will be generated for you to start over</p>
       <p>You get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero</p>
       <p>When you finish a board (or a mine blows up) a new board will be generated automatically</p>
-    </div>
+    </script>
 
   </body>
 </html>

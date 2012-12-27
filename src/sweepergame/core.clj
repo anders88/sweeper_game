@@ -1,9 +1,5 @@
 (ns sweepergame.core)
 
-(def board-rows 16)
-(def board-cols 30)
-(def board-bombs 99)
-
 (defn calculate-board [board pos newval]
   (let [y (first pos) x (second pos)]
   (assoc board y (assoc (board y) x newval)))
@@ -26,13 +22,13 @@
   (for [xd (range -1 2) yd (range -1 2)] [(+ yd (first pos)) (+ xd (second pos))])
   )
 
-(defn offboard? [pos]
+(defn offboard? [pos board]
   (let [y (first pos) x (second pos)]
-    (or (< x 0) (< y 0) (>= x board-cols) (>= y board-rows))
+    (or (< x 0) (< y 0) (>= x (count (board 0))) (>= y (count board)))
   ))
 
 (defn open [pos board allow-reopen]
-  (cond (offboard? pos) {:result :bomb :board board :pos pos :reopened false}
+  (cond (offboard? pos board) {:result :bomb :board board :pos pos :reopened false}
         (bomb? pos board) {:result :bomb :board board :pos pos :reopened false}
         (and allow-reopen (or (contains-what? :open pos board) (contains-what? :hint pos board))) 
             {:result (count (filter #(bomb? % board) (neighbours pos))) :board board :pos pos :reopened true}
@@ -72,7 +68,7 @@
 
 
 
-(defn gen-new-board [] (random-board board-rows board-cols board-bombs))
+(defn gen-new-board [board-rows board-cols board-bombs] (random-board board-rows board-cols board-bombs))
 
 (defn count-neighbour-bombs [board pos]
   (count (filter #(bomb? % board) (neighbours pos)))
@@ -101,9 +97,9 @@
   )
 
 
-(defn replace-if-finished [result]
+(defn replace-if-finished [result board-rows board-cols board-bombs]
   (if (finished-or-failed? result)
-    (gen-new-board)
+    (gen-new-board board-rows board-cols board-bombs)
     (result :board)
   )
   )
