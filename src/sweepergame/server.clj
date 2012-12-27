@@ -34,7 +34,7 @@
                        :numplayers (inc (@status :numplayers))
                        :players (assoc (@status :players)
                                   (str playno)
-                                  {:name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
+                                  {:id playno :name new-player-name :board (gen-new-board) :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
      playno
      )
    )
@@ -196,9 +196,10 @@
 
 
 
-(defn gen-json-score [scores]
+(defn gen-json-score [scores id]
   (generate-string (map (fn [val]
                           {:name (val :name)
+                           :playerClass (if (= id (str (val :id))) "player self" "player")
                            :total ((val :points) :total)
                            :finishedBoards ((val :points) :finishedBoards)
                            :maxOnBoard ((val :points) :maxOnBoard)
@@ -207,8 +208,8 @@
                    )
 )
 
-(defpage [:get "/scorejson"] {:as nopart}
-  (gen-json-score (sort-by-score (all-player-objects)))
+(defpage [:get "/scorejson"] {:as idpart}
+  (gen-json-score (sort-by-score (all-player-objects)) (idpart :id))
 )
 
 (defpage [:get "/boarddebug"] {:as idpart}

@@ -1,12 +1,17 @@
 "use strict";
 
+$.urlParam = function(name){
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    return results ? results[1] || 0 : 0;
+}
+
 $ (function() {
 
     var ScoreRowModel = Backbone.Model.extend({});
 
     var ScoreRowCollection = Backbone.Collection.extend({
         model: ScoreRowModel,
-        url: "/scorejson"
+        url: "/scorejson?id=" + $.urlParam("id")
     });
 
     var ScoreRowView = Backbone.View.extend({

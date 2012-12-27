@@ -9,10 +9,12 @@
     <script src="js/underscore.js"></script>
     <script src="js/backbone.js"></script>
     <script src="js/debugdisp.js"></script>
+    <script src="js/mainpage.js"></script>
     <style type="text/css">
     .unknown { color: white; background: black; }
     .open { color: green; }
     .hint { color: red; }
+    .player.self { background: #ffff88; }
     </style>
 
   </head>
@@ -32,7 +34,25 @@
         <div id="commandsPart"></div>
 
         <legend>Scoreboard</legend>
-        <a href="/">To scoreboard</a>
+        <div id="scoreTable" class="span6">
+        <table class="table table-bordered">
+          <thead>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Finished boards</th>
+            <th>Max opens on one board</th>
+            <th>Number of errors</th>
+          </thead>
+          <tbody id="scoreRow">
+            <script type="text/template" id="row-template">
+              <td class="<%= playerClass %>"><%= name %></td>
+              <td style="text-align:right;"><%= total %></td>
+              <td style="text-align:right;"><%= finishedBoards %></td>
+              <td style="text-align:right;"><%= maxOnBoard %></td>
+              <td style="text-align:right;"><%= bombed %></td>
+            </script>
+          </tbody>
+        </table>
       </div>
     </div>
 

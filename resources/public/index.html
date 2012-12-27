@@ -40,6 +40,13 @@
             <th>Number of errors</th>
           </thead>
           <tbody id="scoreRow">
+            <script type="text/template" id="row-template">
+              <td class="<% class %>"><%= name %></td>
+              <td style="text-align:right;"><%= total %></td>
+              <td style="text-align:right;"><%= finishedBoards %></td>
+              <td style="text-align:right;"><%= maxOnBoard %></td>
+              <td style="text-align:right;"><%= bombed %></td>
+            </script>
           </tbody>
         </table>
       </div>
@@ -61,12 +68,5 @@
       <p>When you finish a board (or a mine blows up) a new board will be generated automatically</p>
     </div>
 
-    <script type="text/template" id="row-template">
-      <td><%= name %></td>
-      <td style="text-align:right;"><%= total %></td>
-      <td style="text-align:right;"><%= finishedBoards %></td>
-      <td style="text-align:right;"><%= maxOnBoard %></td>
-      <td style="text-align:right;"><%= bombed %></td>
-    </script>
   </body>
 </html>
