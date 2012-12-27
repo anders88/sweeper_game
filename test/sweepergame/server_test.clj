@@ -38,11 +38,11 @@
 
 (deftest test-json-generation-of-score
   (testing "That that one score is correct"
-   (is (= "[{\"name\":\"Luke\",\"total\":300,\"finishedBoards\":2,\"maxOnBoard\":4,\"bombed\":0},{\"name\":\"Darth\",\"total\":200,\"finishedBoards\":3,\"maxOnBoard\":5,\"bombed\":0}]"
+   (is (= "[{\"name\":\"Luke\",\"playerClass\":\"player\",\"total\":300,\"finishedBoards\":2,\"maxOnBoard\":4,\"bombed\":0},{\"name\":\"Darth\",\"playerClass\":\"player\",\"total\":200,\"finishedBoards\":3,\"maxOnBoard\":5,\"bombed\":0}]"
           (gen-json-score
-                       [{:name "Luke" :points {:total 300 :finishedBoards 2 :maxOnBoard 4 :bombed 0}}
-                        {:name "Darth" :points {:total 200 :finishedBoards 3 :maxOnBoard 5 :bombed 0}}
-                        ])))
+                       [{:id 1 :name "Luke" :points {:total 300 :finishedBoards 2 :maxOnBoard 4 :bombed 0}}
+                        {:id 2 :name "Darth" :points {:total 200 :finishedBoards 3 :maxOnBoard 5 :bombed 0}}
+                        ] "")))
 ))
 
 (deftest test-add-player

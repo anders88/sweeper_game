@@ -84,5 +84,5 @@
 
 (deftest test-debug-board
   (testing "That it gives the right info to player"
-    (is (= [{:row ["u" 1 "u"]} {:row [0 "u" "u"]}] (debug-board [[0 :open :bomb] [:hint 0 0]])
-            ))))
+    (is (= [{:row [["?" "unknown"] [1 "open"] ["?" "unknown"]]} {:row [[0 "hint"] ["?" "unknown"] ["?" "unknown"]]}]
+           (debug-board [[0 :open :bomb] [:hint 0 0]])))))
