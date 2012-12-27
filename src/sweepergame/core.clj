@@ -29,7 +29,7 @@
 
 (defn open [pos board allow-reopen]
   (cond (offboard? pos board) {:result :bomb :board board :pos pos :reopened false}
-        (bomb? pos board) {:result :bomb :board board :pos pos :reopened false}
+        (bomb? pos board) {:result :bomb :board (calculate-board board pos :open-bomb) :pos pos :reopened false}
         (and allow-reopen (or (contains-what? :open pos board) (contains-what? :hint pos board))) 
             {:result (count (filter #(bomb? % board) (neighbours pos))) :board board :pos pos :reopened true}
                                                               
@@ -92,18 +92,6 @@
   (not (contains? (set (reduce concat board)) 0))
   )
 
-(defn finished-or-failed? [result]
-  (or (finished? (result :board)) (= :open (result :result)) (= :bomb (result :result)))
-  )
-
-
-(defn replace-if-finished [result board-rows board-cols board-bombs]
-  (if (finished-or-failed? result)
-    (gen-new-board board-rows board-cols board-bombs)
-    (result :board)
-  )
-  )
-
 (defn number-of-hints [board]
   (count (filter #(= % :hint) (reduce concat board)))
   )
@@ -116,6 +104,7 @@
   (map (fn [row] {:row (map (fn [pos]
                         (let [content ((board (first pos)) (second pos))]
                           (cond
+                            (= content :open-bomb) ["*" "bomb"]
                             (= content :open) [(count-neighbour-bombs board pos) "open"]
                             (= content :hint) [(count-neighbour-bombs board pos) "hint"]
                             :else ["?" "unknown"]))) row)})

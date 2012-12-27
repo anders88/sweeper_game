@@ -34,6 +34,7 @@
                                   (str playno)
                                   {:id playno
                                     :name new-player-name 
+                                    :game-over false
                                     :board (gen-new-board (@enviroment :rows) (@enviroment :cols) (@enviroment :bombs))
                                     :points {:total 0 :finishedBoards 0 :maxOnBoard 0 :bombed 0}})))
      playno
@@ -70,7 +71,8 @@
   (dosync (ref-set status (assoc @status
                             :players (assoc (@status :players)
                                        player-no (assoc player-map 
-                                                        :board (replace-if-finished result (@enviroment :rows) (@enviroment :cols) (@enviroment :bombs))
+                                                        :board (result :board)
+                                                        :game-over (or (= (result :result) :open) (= (result :result) :bomb) (finished? (result :board)))
                                                         :points (calc-score :hint (result :result) (result :board) (player-map :points) given-move-score)))))
           )))
 
@@ -108,8 +110,6 @@
 ))
 
 
-
-
 (defn board-str [board]
   (str "<html></body><table>"
   (reduce str
@@ -120,8 +120,6 @@
    ) board))
    "</table></body></html>")
   )
-
-
 
 
 
@@ -142,6 +140,7 @@
   (let [player-map (player-object (openpart :id)) pos (read-coordinates openpart)]
   (cond
     (nil? player-map) "Unknown player"
+    (player-map :game-over) "Board is finished" 
     (nil? pos) "Coordinates needed"
     :else (let [result (open pos (player-map :board) (@enviroment :allow-reopen))]
   (let [score (move-score (result :board) (result :reopened))]
@@ -152,13 +151,25 @@
   )
 ))
 
+(defpage [:get "/newBoard"] {:as newpart}
+  (let [player-map (player-object (newpart :id))]
+  (cond
+    (nil? player-map) "Unknown player"
+    :else (let [board (gen-new-board (@enviroment :rows) (@enviroment :cols) (@enviroment :bombs))]
+        (dosync (ref-set status (assoc @status
+                            :players (assoc (@status :players)
+                                       (newpart :id) (assoc player-map :board board :game-over false)))))
+        (Thread/sleep (@enviroment :opensleep))
+        (str "rows=" (@enviroment :rows) ",cols=" (@enviroment :cols) ",bombs=" (@enviroment :bombs))
+  ))))
 
 
 (defpage [:get "/hint"] {:as openpart}
   (let [player-map (player-object (openpart :id))]
-  (if
+  (cond
     (nil? player-map) "Unknown player"
-    (let [result (hint (player-map :board))]
+    (player-map :game-over) "Board is finished" 
+    :else (let [result (hint (player-map :board))]
     (update-player result (openpart :id) player-map)
     (Thread/sleep (@enviroment :hintsleep))
     (str "Y=" (first (result :result)) ",X=" (second (result :result)) ",result=" (result :count))

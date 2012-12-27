@@ -62,14 +62,14 @@
       <ul>
         <li>To open a cell : <%= host %>/open?id=&lt;your id&gt;&amp;x=&lt;x (column no starting on 0)&gt;&amp;y=&lt;y (row)&gt;</li>
         <li>Let the server open a cell for you - <%= host %>/hint?id=&lt;your id&gt;</li>
+        <li>Start a new board - <%= host %>/newBoard?id=&lt;your id&gt;</li>
         <li>Check how you board looks like now (used for debug) <%= host %>/debugoutput.html?id=&lt;your id&gt;</li>
       </ul>
       <p>You will receive an answer like this:</p>
       <p>'Y=3,X=5,result=4'</p>
       <p>This indicates that the sixth column on the fourth row has four bombs. The cell in the upper left corner has coordinate 0,0</p>
       <p>If you get a result like :bomb or :open it means that you have opened a bomb or an already open field. Your score will then be set to 0 and a new board will be generated for you to start over</p>
-      <p>You get points for each finished board. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero</p>
-      <p>When you finish a board (or a mine blows up) a new board will be generated automatically</p>
+      <p>You get points for each board where you don't mess up. Fewer hints used means more points. If you open a mine or a cell that is already opened your score will be set to zero</p>
     </script>
 
   </body>

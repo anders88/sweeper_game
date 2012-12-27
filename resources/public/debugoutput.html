@@ -12,6 +12,7 @@
     <script src="js/mainpage.js"></script>
     <style type="text/css">
     .unknown { color: white; background: black; }
+    .bomb { color: white; background: red; }
     .open { color: green; }
     .hint { color: red; }
     .player.self { background: #ffff88; }
@@ -65,6 +66,7 @@
          <a href="<%= host %>/open?id=<%= playerId %>&x=<%= xpos %>&y=<%= ypos %>">
            <%= host %>/open?id=<%= playerId %>&x=<%= xpos %>&y=<%= ypos %></a>
          </li>
+       <li>New board: <a href="<%= host %>/newBoard?id=<%= playerId %>"><%= host %>/newBoard?id=<%= playerId %></a></li>
       </ul>
      </script>
 
