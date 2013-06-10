@@ -50,7 +50,7 @@
 
 (defn calc-score
   [type-of-open open-res board old-score given-move-score]
-  (if (or (= open-res :open) (= open-res :bomb)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
+  (if (or (= open-res :open) (= open-res :bomb) (= open-res :offboard)) (assoc old-score :total 0 :bombed (inc (old-score :bombed)))
   (assoc old-score :total (+ (old-score :total) given-move-score)
    :finishedBoards (if (finished? board) (inc (old-score :finishedBoards)) (old-score :finishedBoards))
    :minimumHints (min (old-score :minimumHints) (- (cells-on-board board) (number-of-opens board)))
@@ -73,7 +73,7 @@
                             :players (assoc (@status :players)
                                        player-no (assoc player-map 
                                                         :board (result :board)
-                                                        :game-over (or (= (result :result) :open) (= (result :result) :bomb) (finished? (result :board)))
+                                                        :game-over (or (= (result :result) :open) (= (result :result) :bomb) (= (result :result) :offboard) (finished? (result :board)))
                                                         :points (calc-score :hint (result :result) (result :board) (player-map :points) given-move-score)))))
           )))
 
